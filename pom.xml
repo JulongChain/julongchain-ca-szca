@@ -10,11 +10,9 @@
     <version>1.0</version>
     <modules>
         <!--
-        <module>ca-szca-common</module>
-        <module>ca-szca-client</module>
-        <module>ca-szca-admin-webapp</module>
-        <module>ca-szca-public-webapp</module>
+
     -->
+
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
