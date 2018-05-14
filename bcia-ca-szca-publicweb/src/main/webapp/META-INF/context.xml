@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="10" maxIdle="10" maxWait="10000" name="jdbc/BciaDS" password="bcia" testWhileIdle="true" timeBetweenEvictionRunsMillis="10000" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/bcia_szca?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false" username="bcia" validationQuery="select 1"/>
+</Context>
