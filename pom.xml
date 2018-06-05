@@ -25,7 +25,11 @@
     <packaging>pom</packaging>
     <name>bcia-ca-szca</name>
     <modules>
-        <module>test_webapp</module>
+        <module>bcia-ca-szca-publicweb</module>
+        <module>bcia-ca-szca-ocsp-server</module>
+
+        <module>bcia-ca-szca-common</module>
+        <module>bica-ca-szca-adminweb</module>
     </modules>
 
     <groupId>bcia-ca-szca</groupId>
