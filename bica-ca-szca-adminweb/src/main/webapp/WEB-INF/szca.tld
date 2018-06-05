@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ <p>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ <p>
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ <p>
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<tlib-version>1.0</tlib-version>
+	<short-name>szca</short-name>
+	<uri>http://www.szca.com/jsp/jstl/szca</uri>
+	<!-- 配置自定义标签 select  -->
+	<tag>
+		<name>pager</name><!-- 自定义的标签名字  -->
+		<tag-class>com.szca.wfs.common.PagerTag</tag-class><!-- 类名  -->
+		<body-content>empty</body-content>
+		<attribute>
+			<name>id</name><!-- 属性名字  -->
+			<required>true</required><!-- 是否必选  -->
+			<rtexprvalue>true</rtexprvalue><!--是否支持 el 表达式  -->
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	 
+		<attribute>
+			<name>rowsCount</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentPage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowsPerPage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>gotoJsFunction</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<function>
+		<description>Index Of String</description>
+		<name>indexOf</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.Integer
+			indexOf(java.lang.String,java.lang.String)
+		</function-signature>
+	</function>
+
+
+	<function>
+		<description>trim string,截取字符串到指定长度</description>
+		<name>trimStr</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<!-- 参数类型不能使用long，只能使用String -->
+		<function-signature>java.lang.String
+			trimStr(java.lang.String,java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<description>trim string,根据截取字符串的长度，决定是否显示title,tip</description>
+		<name>trimStrTip</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<!-- 参数类型不能使用long，只能使用String -->
+		<function-signature>java.lang.String
+			trimStrTip(java.lang.String,java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>处理日期时间的格式 , 默认 yyyy-MM-dd HH:mm:ss </description>
+		<name>formatDate</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String formatDate(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<description>按照指定格式处理日期时间的格式</description>
+		<name>formatDateByPattern</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String formatDate(java.lang.Object,
+			java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<description>escapeHtml</description>
+		<name>escapeHtml</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
+	</function>
+<!-- 
+	<function>
+		<description>pagerBar</description>
+		<name>pagerBar</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String
+			pagerBar(java.lang.Object,java.lang.Object)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>pagerBar4rows</description>
+		<name>pagerBar4rows</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String
+			pagerBar(java.lang.Object,java.lang.Object,java.lang.Object)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>counterBar</description>
+		<name>counterBar</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String counterBar(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<description>testRequest</description>
+		<name>testRequest</name>
+		<function-class>com.szca.wfs.common.SzcaElFunction</function-class>
+		<function-signature>java.lang.String testRequest(java.lang.Object)</function-signature>
+	</function> -->
+</taglib>

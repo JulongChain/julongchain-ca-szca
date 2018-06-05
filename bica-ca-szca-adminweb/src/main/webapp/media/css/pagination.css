@@ -1,0 +1,45 @@
+/*
+ *
+ * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright © 2018  SZCA. All Rights Reserved.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+ /*分页*/
+.pagination { color:#585e60;}
+.pageBox { font-size:12px; margin-bottom:1px; }
+.pageBox a, .pageBox span, .pagination .pageBtn { border:1px #bac3c7 solid; background-color:#f6f8f9; display:inline-block; *display:inline; zoom:1; position:relative; z-index:10; height:25px; line-height:25px; width:25px; text-align:center; margin-left:9px; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; *behavior: url(css/ie-css3.htc);} 
+
+.pageBox .prev, .pageBox .next { width:60px; }
+.pagination .pageBtn { cursor:pointer; height:25px; width:60px; line-height:25px;}
+
+.pagination .current.prev, .pagination .current.next{
+	color:#a7b1b4;
+	border-color:#a7b1b4;
+	background:#fff;
+}
+.pagination .current {
+	border:1px #4cabd7 solid;
+    background: #4cabd7;
+    color: #fff;
+}
+#gotoPageNumber { border:1px #bac3c7 solid; height:20px; line-height:15px; width:50px; padding:5px; margin:0 4px; text-align:center;}
+.mt5 { margin-top:5px;}
+.mr10 { margin-right:10px;}
+.fb { font-weight:bold;}
+.fl { float:left !important;}
+input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;vertical-align:middle}
+input,textarea,select{*font-size:100%}
+/*分页 End*/
