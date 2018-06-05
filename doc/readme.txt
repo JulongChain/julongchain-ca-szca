@@ -10,7 +10,7 @@ CA系统的后台配置管理应用，CA系统所有配置、管理功能都由�
 二、数据库;
 1.数据库连接配置文件是bcia-ca-szca-publicweb/src/main/webapp/META-INF/context.xml
 2.建议使用MySql5.7或者以上版本.
-3.正确设置数据库连接参数后，启动bcia-ca-szca-adminweb系统时会自动创建数据库对象（表、序列、视图、过程等），同时导入必要的初始化数据。
+3.请参考 -> 初始化->sql的脚本初始化相关数据库。
 
 三、应用服务器
 建议使用Tomcat 8.5版本
