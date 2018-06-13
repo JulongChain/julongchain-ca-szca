@@ -249,7 +249,12 @@
             <artifactId>jldap</artifactId>
             <version>2009-10-07</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.5.Final</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>bcia-public-web</finalName>

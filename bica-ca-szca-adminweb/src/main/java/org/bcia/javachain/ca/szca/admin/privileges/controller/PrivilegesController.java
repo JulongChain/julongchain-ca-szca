@@ -23,12 +23,18 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.bcia.javachain.ca.result.Result;
 import org.bcia.javachain.ca.szca.admin.privileges.service.PrivilegesService;
+import org.bcia.javachain.ca.szca.admin.privileges.vo.AccessRuleFrom;
 import org.bcia.javachain.ca.szca.admin.privileges.vo.EditBasicAccessRulesFrom;
+import org.cesecore.authorization.AuthorizationDeniedException;
+import org.cesecore.authorization.rules.AccessRuleExistsException;
 import org.cesecore.roles.RoleData;
+import org.cesecore.roles.RoleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +45,8 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping({ "privileges" })
 public class PrivilegesController {
+	private static Logger log = Logger.getLogger(PrivilegesController.class);
+
 	@Autowired
 	PrivilegesService privilegesService;
 
@@ -93,6 +101,13 @@ public class PrivilegesController {
  		return view;
 	}
 	
+	@RequestMapping(value = "/editadvancedaccessrules", method = RequestMethod.GET)
+	public ModelAndView editadvancedaccessrules(HttpServletRequest request, String roleName) {
+		ModelAndView view = new ModelAndView("/privileges/editadvancedaccessrules");
+		privilegesService.editadvancedaccessrules(request, roleName, view);
+ 		return view;
+	}
+	
 	
 	@RequestMapping(value = "/deleteAdmin", method = { RequestMethod.POST })
 	@ResponseBody
@@ -110,5 +125,27 @@ public class PrivilegesController {
 	}
 
 	
+
+	@RequestMapping(value = "/saveAdvancedAccessRules", method = { RequestMethod.POST })
+	@ResponseBody
+	public String saveAdvancedAccessRules(HttpServletRequest request,String roleName, @ModelAttribute("accessRuleFrom")AccessRuleFrom accessRuleFrom) {
+   		Result result =new Result();
+		try {
+			privilegesService.saveAdvancedAccessRules(request,roleName,accessRuleFrom);
+			System.out.println(accessRuleFrom);
+			result.setSuccess(true);
+		} catch (AuthorizationDeniedException e) {
+			log.error(e.getMessage());
+ 			result.setMsg("Authorization Denied");
+		} catch (RoleNotFoundException e) {
+			log.error(e.getMessage());
+ 			result.setMsg("Role Not Found");
+		} catch (AccessRuleExistsException e) {
+			log.error(e.getMessage());
+ 			result.setMsg("Access Rule Exists");
+		}
+		return JSONObject.fromObject(result).toString();
+	}
+
 	
 }

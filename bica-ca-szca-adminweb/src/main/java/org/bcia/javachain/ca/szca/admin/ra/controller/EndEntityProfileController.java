@@ -29,6 +29,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bcia.javachain.ca.szca.admin.ca.CaManagementBean;
+import org.bcia.javachain.ca.szca.admin.ra.servcie.CertProcessService;
 import org.bcia.javachain.ca.szca.admin.ra.servcie.EndEntityProfileService;
 import org.cesecore.authentication.tokens.AuthenticationToken;
 import org.cesecore.certificates.ca.CAData;
@@ -61,6 +62,8 @@ public class EndEntityProfileController {
 	private EntityManager entityManager;
 	@Autowired 
 	EndEntityProfileService  endEntityProfileService;
+	@Autowired
+	CertProcessService certProcessService;
 	private Map<String, String> dnMap;
 	private Map<String, String> altMap;
 	private Map<String, String> dirMap;
@@ -160,6 +163,7 @@ public class EndEntityProfileController {
 			if (auth == null)
 				throw new Exception("没有操作终端实体模板的权限。");
 			endEntityProfileSessionBean.renameEndEntityProfile(auth, orgname, profileName);
+			certProcessService.updateEndEntityProfileName(entityManager, orgname, profileName);
 		} catch (Exception e) {
 			e.printStackTrace(); 
 		}

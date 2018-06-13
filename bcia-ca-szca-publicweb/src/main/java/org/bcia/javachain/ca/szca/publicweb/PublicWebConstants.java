@@ -16,9 +16,12 @@
  * limitations under the License.
  *
  */
+package org.bcia.javachain.ca.szca.publicweb;
 
-package org.bcia.javachain.ca.szca.admin;
-
-public class DD {
-
+/**
+ * @author Jacky Luo
+ *
+ */
+public class PublicWebConstants {
+	public static String ADMIN_URL="";
 }

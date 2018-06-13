@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ <p>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ <p>
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ <p>
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
 	xsi:schemaLocation="  
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd  
@@ -13,8 +32,11 @@
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd  
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd  
         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
-	default-lazy-init="true">
-
+	default-lazy-init="false">
+	<!--
+	由于在org.bcia.javachain.ca.szca.publicweb.InitGlobalConfig中使用了 @PostConstruct做系统初始化，default-lazy-init="false" .
+	若default-lazy-init="true"申明了延迟初始化,意味着容器刚启动,如果这个bean没有被调用,是不会初始化。
+ -->
 	<description>Spring公共配置 </description>
 	<bean id="dataSource"
 		class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -56,6 +78,7 @@
 				<prop key="hibernate.show_sql">true</prop>
 				<!-- 在resources/import.sql中有系统初始化数据的脚本 hibernate.hbm2ddl.auto 设置为create时每次启动Hibernate都会先删除所有表，再创建表，然后再执行import.sql中的脚本 ，而hibernate.hbm2ddl.auto 设置为update时，则不会执行此脚本 -->
 				<!-- <prop key="hibernate.hbm2ddl.auto">create</prop>   -->
+				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop>   -->
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 			</props>
 		</property>

@@ -1,23 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
-  ~ /***
-  ~  *
-  ~  * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
-  ~  * Copyright © 2018  SZCA. All Rights Reserved.
-  ~  * <p>
-  ~  * Licensed under the Apache License, Version 2.0 (the "License");
-  ~  * you may not use this file except in compliance with the License.
-  ~  * You may obtain a copy of the License at
-  ~  * <p>
-  ~  * http://www.apache.org/licenses/LICENSE-2.0
-  ~  * <p>
-  ~  * Unless required by applicable law or agreed to in writing, software
-  ~  * distributed under the License is distributed on an "AS IS" BASIS,
-  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~  * See the License for the specific language governing permissions and
-  ~  * limitations under the License.
-  ~  *
-  ~  */
+  ~
+  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ <p>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ <p>
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ <p>
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
   --%>
 
 <!DOCTYPE html>
@@ -29,7 +27,7 @@
 <body>
 	<!-- START nav -->
 	<jsp:include page="common/topNav.jsp" flush="true">
-		<jsp:param value="menu_register" name="currMenu" />
+		<jsp:param value="menu_csr" name="currMenu" />
 	</jsp:include>
 
 	<!-- END nav -->
@@ -41,145 +39,35 @@
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md">
-					<h2 class="heading mb-2 display-4 font-light probootstrap-animate">注册终端实体</h2>
-					<p class="lead mb-5 probootstrap-animate">注册一个终端实体，返回注册密码，请牢记此密码，切莫向他人泄露此密码。给此实体注册证书时需要使用此密码。</p>
-					<%-- 
-					<p class="lead mb-5 probootstrap-animate"></p>
-					<a href="onepage.html" role="button" class="btn btn-primary p-3 mr-3 pl-5 pr-5 text-uppercase d-lg-inline d-md-inline d-sm-block d-block mb-3">See
-						OnePage Verion</a>
-					</p> --%>
+					<h2 class="heading mb-2 display-4 font-light probootstrap-animate">申请实体证书</h2>
+					<p class="lead mb-5 probootstrap-animate">注册一个终端实体，请牢记此用户名和密码，切莫向他人泄露此密码。给此实体注册证书时需要使用此密码。</p>
+					 
 				</div>
 				 
 				<div class="col-md-right">
-					<form action="addEntity.html" id="endEntityForm" class="probootstrap-form">
-				 <input type="hidden" name="password" value="">
-				 <input type="hidden" name="keylength" value="2048">
-				 <input type="hidden" name="certprofile" value="ENDUSER">
-				 
-				 
-											
-							<div class="row mb-3">
+				<!-- <div >
+				<iframe name="downloadEndEntityCertFrame" frameborder=0 width=0 height=0></iframe>
+				  </div> -->
+					<form name="genCsrForm" id="genCsrForm" action="genCsr.html" method="post"  class="probootstrap-form">
+					
+					<div class="row mb-3">
 								<div class="col-md">
 									<div class="form-group">
 										<span id="id_testResultMsg" style="color: red"></span>										 
 									</div>
 								</div>							 
 							</div>
-							
-							
 						<div class="form-group">
-						 
-							<div class="row mb-3">
-								<div class="col-md">
-									<div class="form-group">
-										<label for="id_label_single1">实体名称</label> 
-										<input type="text" name="user" value="" placeholder="username">
-										 
-									</div>
-								</div>
-								
-							</div>
-							<!-- 
-							<div class="row mb-3">
-								
-								<div class="col-md">
-									<div class="form-group">
-								 
-										<label for="id_label_single1">密码</label> 
-										<input type="password" name="password" value="">
-										 
-									</div>
-								</div>
-								
-							</div>
-							 -->
-							<!-- END row -->
-							<!-- 
-							<div class="row mb-3">
-								<div class="col-md">
-									<div class="form-group">
-										<label for="probootstrap-date-departure">密钥长度</label>
-										<div class="probootstrap_select-wrap">
-											<label for="id_label_single3" style="width: 100%;"> 										 
-											<select name="keylength" class="js-example-basic-single js-states form-control" id="id_label_single3" style="width: 100%;">
-													<option value="1024">1024</option>
-													<option value="2048">2048</option>													 
-											</select>
-											</label>
+							<c:forEach items="${certProcessDatas }" var="cpd">
+								<div class="row mb-3">
+									<div class="col-md">
+										<div class="form-group">
+											<input type="button" value="${cpd.processName }" class="btn btn-primary btn-block" onclick="openUrl('addEntity.html?processId=${cpd.processId}')"/>							 
 										</div>
 									</div>
 								</div>
-							</div>
-							 -->
-							 <!-- 
-							<div class="row mb-3">
-								<div class="col-md">
-									<div class="form-group">
-										<label for="probootstrap-date-arrival">证书模板</label>
-										<div class="probootstrap_select-wrap">
-											<label for="id_label_single4" style="width: 100%;"> 										 
-											<select name="certprofile" class="js-example-basic-single js-states form-control" id="id_label_single4" style="width: 100%;">
-													<option value="ENDUSER">ENDUSER</option>
-													<option value="SERVER">SERVER</option>													 
-											</select>
-											</label>
-										</div>
-										
-										
-									</div>
-								</div>
-							</div>
-							 -->
-							 <div class="row mb-3">
-								<div class="col-md">
-									<div class="form-group">
-										<label for="probootstrap-date-departure">CA名称</label>
-										<div class="probootstrap_select-wrap">
-											<label for="id_label_single3" style="width: 100%;"> 										 
-											<select name="caId" class="js-example-basic-single js-states form-control"  style="width: 100%;">
-											 <c:forEach items="${caList }" var="caData">
-											 <option value="${caData.caId}" title="${caData.subjectDN}">${caData.name}</option>
-											 </c:forEach>												 	 												 
-											</select>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
+							</c:forEach>
 							
-							<!-- END row -->
-							<div class="row mb-3">
-								<div class="col-md">
-									<div class="form-group">
-										<label for="probootstrap-date-departure">证书主题(Subject DN )</label>
-										 <!-- <input type="text" name="subjectDn" > -->
-										 <textarea name="subjectDn" rows="3" style="resize:none;width:100%;" placeholder="CN=username,OU=szca,O=bica,C=cn"></textarea>
-										 
-									</div>
-								</div>
-								
-							</div>
-							<div class="row mb-3">
-								
-								<div class="col-md">
-									<div class="form-group">
-										<label for="probootstrap-date-arrival">使用者可选名称(Subject Alt Name)</label>
-										 
-										<textarea name="subjectAltName" rows="3" style="resize:none;width:100%;" placeholder="dnsName=localhost,IPAddress=127.0.0.1"></textarea>
-										
-									</div>
-								</div>
-							</div>
-							
-							<!-- END row -->
-							<div class="row">
-								<!-- <div class="col-md">
-									
-								</div> -->
-								<div class="col-md">
-									<input type="button" value="提交" class="btn btn-primary btn-block" onclick="addEndEntity()">
-								</div>
-							</div>
 						</div>
 					</form>
 				</div> 
@@ -188,48 +76,15 @@
 
 	</section>
 	<!-- END section -->
-	 
-
-	 
-	<!-- END section -->
-
-  
-
-
-  
-	<!-- END section -->
  
-	<!-- END section -->
- 
-	<!-- END section -->
- 
-	<!-- END section -->
- 
-	<!-- END section -->
- 
-	<!-- END section -->
 
 	<!-- START Footer -->
 	<%@include file="common/footer.jsp" %>
 	<!-- END Footer -->
 </body>
 <script>
- 
-function addEndEntity(){
-	 $.ajax({
-					type : "POST",
-					dataType : "json",
-					url : "${pageContext.request.contextPath}/addEntity.html",
-					data : $('#endEntityForm').serialize(),
-					success : function(resp) {	 
-						//alert(resp.message);						 
-						$("#id_testResultMsg").html(resp.message);	
-						 
-					},
-					error : function(data) {					 
-						//btnobj.setAttribute("disabled", false);
-					}
-				});
+function openUrl(url){
+	 window.location.href=url;
 }
 </script>
 <script type="text/javascript">

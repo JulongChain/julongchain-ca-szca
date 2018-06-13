@@ -81,12 +81,14 @@ import org.ejbca.core.model.ra.raadmin.EndEntityProfile;
 import org.ejbca.core.model.ra.raadmin.UserDoesntFullfillEndEntityProfile;
 import org.ejbca.core.model.ra.raadmin.validators.RegexFieldValidator;
 import org.ejbca.ui.web.CertificateView;
+import org.ejbca.util.query.IllegalQueryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.szca.common.LoginUser;
+import com.szca.wfs.common.BaseForm;
 
 import cn.net.bcia.bcca.config.WebConfiguration;
 import cn.net.bcia.bcca.core.ejb.ca.store.CertReqHistorySessionLocal;
@@ -720,11 +722,33 @@ public class RaFunctionsServiceImpl implements RaFunctionsService{
  	    }
 
 	@Override
-	public List<EndEntityInfoVo> findAllUsers(HttpServletRequest request,int index, int size) throws FinderException {
+	public void findAllUsers(HttpServletRequest request,BaseForm baseForm,ModelAndView view,EndEntityInformationVo endEntityInformationVo) throws IllegalQueryException {
 		   UsersView  usersView = new UsersView();
-			AuthenticationToken administrator= getAuthenticationToken(request);
- 	       usersView.setUsers(endEntityManagementSessionBean.findAllUsersWithLimit(administrator), casession.getCAIdToNameMap());
-	       UserView[] uv=  usersView.getUsers(index,size);
+		   AuthenticationToken administrator= getAuthenticationToken(request);
+		   int total=  0;
+ 		   if(null!=endEntityInformationVo&&StringUtils.isNoneEmpty(endEntityInformationVo.getUsername())) {
+   		    	EndEntityInformation[] userarray = new EndEntityInformation[1];
+ 		    	EndEntityInformation user = null;
+ 		    	try {
+ 		    		user = endEntityAccessSession.findUser(administrator, endEntityInformationVo.getUsername());
+ 		    	} catch(AuthorizationDeniedException e) {
+ 		    	}
+ 		    	if (user != null) {
+ 		    		userarray[0]=user;
+ 		    		total=1;
+ 		    		usersView.setUsers(userarray, casession.getCAIdToNameMap());
+ 		    	} else {
+ 		    		usersView.setUsers((EndEntityInformation[]) null, casession.getCAIdToNameMap());
+ 		    	}
+  		   }else {//  else if  TODO
+  			   total=   endEntityManagementSessionBean.findAllUsersTotal(administrator);
+  	  		   usersView.setUsers(endEntityManagementSessionBean.findAllUsers(administrator,baseForm.getCurrentPage(),baseForm.getRowsPerPage()), casession.getCAIdToNameMap());
+   		   }
+ 		   view.addObject("totalRowsCount", total);
+		   view.addObject("currentPage", baseForm.getCurrentPage());
+		   view.addObject("rowsPerPage", baseForm.getRowsPerPage());
+		   
+	       UserView[] uv=  usersView.getUsers(0,usersView.size());
 	       List<EndEntityInfoVo> list=new ArrayList<EndEntityInfoVo>();
 	       for(int i=0;i<uv.length;i++) {
 	    	   EndEntityInfoVo endEntityInfoVo=new EndEntityInfoVo();
@@ -737,23 +761,26 @@ public class RaFunctionsServiceImpl implements RaFunctionsService{
 			}
 	    	   endEntityInfoVo.setCaName(uv[i].getCAName());
 	    	   endEntityInfoVo.setCommonName(uv[i].getCommonName());
-	    	   
 	    	   endEntityInfoVo.setStatus(getStatus(uv[i].getStatus()));
-	    	   
  			   endEntityInfoVo.setViewendentity((authorizedToEditUser(uv[i].getEndEntityProfileId(),administrator) || !globalconfiguration.getEnableEndEntityProfileLimitations())
 				   && isAuthorizedNoLog(administrator,AUTHORIZED_RA_EDIT_RIGHTS));
                endEntityInfoVo.setAuthorizedCaView_cert(isAuthorizedNoLog(administrator,AUTHORIZED_CA_VIEW_CERT));
                endEntityInfoVo.setAuthorizedHardtokenViewRights(globalconfiguration.getIssueHardwareTokens() && (authorizedToViewHardToken(administrator,uv[i].getEndEntityProfileId()) || !globalconfiguration.getEnableEndEntityProfileLimitations())
                        && isAuthorizedNoLog(administrator,AUTHORIZED_HARDTOKEN_VIEW_RIGHTS));
                endEntityInfoVo.setAuthorizedRaHistoryRights((authorizedToViewHistory(administrator,uv[i].getEndEntityProfileId()) || !globalconfiguration.getEnableEndEntityProfileLimitations()) &&isAuthorizedNoLog(administrator,AUTHORIZED_RA_HISTORY_RIGHTS));
-  	    	  
-               
                endEntityInfoVo.setSubjectDNFieldO(uv[i].getSubjectDNField(DNFieldExtractor.OU,0));
 	    	   endEntityInfoVo.setSubjectDNFieldO(uv[i].getSubjectDNField(DNFieldExtractor.O,0));
 	    	   list.add(endEntityInfoVo);
               }
-	       return list;
-	    }
+			view.addObject("VIEWENDENTITY", WebLanguages.getInstance().getText("VIEWENDENTITY"));
+			view.addObject("EDITENDENTITY", WebLanguages.getInstance().getText("EDITENDENTITY"));
+			view.addObject("VIEWCERTIFICATES", WebLanguages.getInstance().getText("VIEWCERTIFICATES"));
+			view.addObject("VIEWHARDTOKENS", WebLanguages.getInstance().getText("VIEWHARDTOKENS"));
+			view.addObject("VIEWHISTORY", WebLanguages.getInstance().getText("VIEWHISTORY"));
+			view.addObject("endEntityInformationVo", endEntityInformationVo);
+			view.addObject("list", list);
+ 			
+ 	    }
 
 	
 	private String getStatus(int status) {

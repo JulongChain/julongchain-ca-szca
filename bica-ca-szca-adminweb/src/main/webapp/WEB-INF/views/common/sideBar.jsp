@@ -1,3 +1,4 @@
+<%@page import="org.bcia.javachain.ca.szca.admin.common.AdminWebConstants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%--
@@ -24,7 +25,7 @@
 	String plvl1 = request.getParameter("menuLevel1");
 	String plvl2 = request.getParameter("menuLevel2");
 	String plvl3 = request.getParameter("menuLevel3");
-	
+	String publicUrl = AdminWebConstants.PUBLIC_URL;
 %>
 <%!
 String isActive(String menuId,String plvl1,String plvl2,String plvl3){
@@ -49,6 +50,7 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 			<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 			<div class="sidebar-toggler hidden-phone"></div> <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 		</li>
+		<%--
 		<li>
 			<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
 			<form class="sidebar-search">
@@ -56,7 +58,7 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 					<a href="javascript:;" class="remove"></a> <input type="text" placeholder="Search..." /> <input type="button" class="submit" value=" " />
 				</div>
 			</form> <!-- END RESPONSIVE QUICK SEARCH FORM -->
-		</li>
+		</li> --%>
 		<li class="start <%=isActive("home",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/index.html"> <i class="icon-home"></i> <span class="title">首页</span> <%=isSelect("home",plvl1,plvl2,plvl3)%>
 		</a></li>
 		<li class="<%=isActive("ca",plvl1,plvl2,plvl3)%>"><a href="javascript:;"> <i class="icon-cogs"></i> <span class="title">CA功能</span> <%=isSelect("ca",plvl1,plvl2,plvl3)%><%=isOpen("ca",plvl1,plvl2,plvl3)%>
@@ -67,7 +69,7 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 				<li class="<%=isActive("certProfileList",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/ca/certProfileList.html"> 证书模板</a></li>			 
 				<li class="<%=isActive("caList",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/ca/caList.html">CA配置管理</a></li>
 				<li class="<%=isActive("cryptoToken",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/cryptoToken/cryptoTokenList.html">秘钥配置管理</a></li>
-				<li><a href="layout_ajax.html"> 发布器配置管理</a></li>
+			<!-- 	<li><a href="layout_ajax.html"> 发布器配置管理</a></li> -->
  			</ul></li>
 		<li class="<%=isActive("ra",plvl1,plvl2,plvl3)%>"><a href="javascript:;"> <i class="icon-bookmark-empty"></i> <span class="title">RA 功能</span> <%=isSelect("ra",plvl1,plvl2,plvl3)%><%=isOpen("ra",plvl1,plvl2,plvl3)%>
 		</a>
@@ -75,21 +77,22 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 				<li  class="<%=isActive("addendentity",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/ra/addendentity.html"> 添加终端实体</a></li>
 				<li  class="<%=isActive("listEndentity",plvl1,plvl2,plvl3)%>"> <a href="${pageContext.request.contextPath}/ra/listEndentity.html">终端实体管理</a></li>
 				<li  class="<%=isActive("endEntityProfileList",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/ra/endEntityProfileList.html">终端实体模板配置管理</a></li>
+       			<li  class="<%=isActive("certProcessList",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/ra/certProcessList.html">实体证书流程配置</a></li>
        			</ul></li>
 		<li class="<%=isActive("audit",plvl1,plvl2,plvl3)%>"><a href="javascript:;"> <i class="icon-table"></i> <span class="title">监察员功能</span> <%=isSelect("audit",plvl1,plvl2,plvl3)%><%=isOpen("audit",plvl1,plvl2,plvl3)%>
 		</a>
 			<ul class="sub-menu">
-				<li><a href="form_layout.html"> 操作审核</a></li>
+			<!-- 	<li><a href="form_layout.html"> 操作审核</a></li> -->
  				<li class="<%=isActive("logSearch",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/audit/logSearch.html">操作日志</a></li>
  			</ul></li>
 		<li class="<%=isActive("sys",plvl1,plvl2,plvl3)%>"><a href="javascript:;"> <i class="icon-briefcase"></i> <span class="title">系统功能</span> <%=isSelect("sys",plvl1,plvl2,plvl3)%><%=isOpen("sys",plvl1,plvl2,plvl3)%> 
 		</a>
 			<ul class="sub-menu">
 			   <li class="<%=isActive("administratorprivileges",plvl1,plvl2,plvl3)%>"><a href="${pageContext.request.contextPath}/privileges/administratorprivileges.html">管理员权限配置管理</a></li>
- 				<li><a href="page_coming_soon.html"> <i class="icon-cogs"></i> 秘钥绑定配置管理
+ 			<!-- 	<li><a href="page_coming_soon.html"> <i class="icon-cogs"></i> 秘钥绑定配置管理
 				</a></li>
 				<li><a href="page_blog.html"> <i class="icon-comments"></i>服务配置管理
-				</a></li>
+				</a></li> -->
  			</ul></li>
 		<li class=""><a href="javascript:;"> <i class="icon-gift"></i> <span class="title">系统配置</span> <span class="arrow "></span>
 		</a>
@@ -98,15 +101,17 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 				<li><a href="extra_lock.html"> SCEP配置管理</a></li>
 				<li><a href="extra_faq.html"> 系统配置管理</a></li>
  			</ul></li>
-  	 
+  	 <!-- 
 		<li class="last "><a href="charts.html"> <i class="icon-bar-chart"></i> <span class="title">管理员首选项</span>
+		</a></li> -->
+		<li class="last "><a href="<%=publicUrl%>"> <i class="icon-bar-chart"></i> <span class="title">公共前端网站</span>
 		</a></li>
-		<li class="last "><a href="charts.html"> <i class="icon-bar-chart"></i> <span class="title">公共前端网店</span>
-		</a></li>
+		<!--
 		<li class="last "><a href="charts.html"> <i class="icon-bar-chart"></i> <span class="title">文档</span>
 		</a></li>
 		<li class="last "><a href="charts.html"> <i class="icon-bar-chart"></i> <span class="title">登出</span>
 		</a></li>
+		 -->
 	</ul>
 	<!-- END SIDEBAR MENU -->
 </div>

@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.bcia.javachain.ca.result.Result;
 import org.bcia.javachain.ca.szca.admin.ra.UserView;
-import org.bcia.javachain.ca.szca.admin.ra.vo.EndEntityInfoVo;
 import org.bcia.javachain.ca.szca.admin.ra.vo.EndEntityInformationVo;
 import org.cesecore.authentication.tokens.AuthenticationToken;
 import org.cesecore.authorization.AuthorizationDeniedException;
@@ -37,7 +36,10 @@ import org.ejbca.core.EjbcaException;
 import org.ejbca.core.ejb.ra.EndEntityExistsException;
 import org.ejbca.core.model.approval.WaitingForApprovalException;
 import org.ejbca.core.model.ra.raadmin.UserDoesntFullfillEndEntityProfile;
+import org.ejbca.util.query.IllegalQueryException;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.szca.wfs.common.BaseForm;
 
 /**
 * Description:
@@ -106,7 +108,7 @@ public Result saveEndentity(HttpServletRequest request,EndEntityInformationVo en
 * Author:power
 * Version: 1.0
 */
-public List<EndEntityInfoVo> findAllUsers(HttpServletRequest request,int index, int size) throws FinderException;
+public void findAllUsers(HttpServletRequest request,BaseForm baseForm,ModelAndView view ,EndEntityInformationVo endEntityInformationVo)throws IllegalQueryException;
  
 /**
 * Description:获取实体信息

@@ -43,11 +43,13 @@ public class ApiAdminUserData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(ApiAdminUserData.class);
+ 
 
 	private String username;
 	private String password;
 
-
+	
+	 
 	@Id
 	public String getUsername() {
 		return username;

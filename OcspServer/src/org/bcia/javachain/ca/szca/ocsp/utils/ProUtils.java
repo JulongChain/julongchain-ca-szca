@@ -17,8 +17,33 @@
  *
  */
 
-package org.bcia.javachain;
+package org.bcia.javachain.ca.szca.ocsp.utils;
 
-public class CCC {
+import java.io.IOException;
+import java.util.Properties;
+
+public class ProUtils {
+	private static String filePath = "/config.properties";
+	private static Properties props;
+	
+	
+	private static void load() throws IOException { 
+        props = new Properties(); 
+        props.load(ProUtils.class.getResourceAsStream(filePath));  
+	}
+	
+	/**  
+     * 根据key获取value  
+     * @param key  
+     * @return  
+	 * @throws IOException 
+	 * @throws Exception 
+     */  
+    public static  String getKeyValue(String key) throws IOException {
+    	if(props == null)
+    		load();
+
+        return props.getProperty(key);   
+    }   
 
 }

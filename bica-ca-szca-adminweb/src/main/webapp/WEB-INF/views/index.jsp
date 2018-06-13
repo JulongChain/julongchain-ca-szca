@@ -44,15 +44,9 @@
 		<!-- END SIDEBAR -->
 		<!-- BEGIN PAGE -->
 		<div class="page-content">
+		
 			<!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-			<!-- 
-			<div id="portlet-config" class="modal hide">
-				<div class="modal-header">
-					<button data-dismiss="modal" class="close" type="button"></button>
-					<h3>Widget Settings</h3>
-				</div>
-				<div class="modal-body">Widget settings form goes here</div>
-			</div> -->
+			 
 			<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
 			<!-- BEGIN PAGE CONTAINER-->
 			<div class="container-fluid">
@@ -60,12 +54,13 @@
 				<div class="row-fluid">
 					<div class="span12">
 						<!-- BEGIN STYLE CUSTOMIZER -->
-						<%--@include file="common/theme.jsp" --%>
+						
 						<!-- END BEGIN STYLE CUSTOMIZER -->
 						<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 						<h3 class="page-title">
-							Dashboard <small>statistics and more</small>
+							聚龙链 <small>CA后台管理系统</small>
 						</h3>
+						<%--
 						<ul class="breadcrumb">
 							<li><i class="icon-home"></i> <a href="index.html">Home</a> <i class="icon-angle-right"></i></li>
 							<li><a href="#">Dashboard</a></li>
@@ -75,18 +70,21 @@
 									<i class="icon-calendar"></i> <span></span> <i class="icon-angle-down"></i>
 								</div>
 							</li>
-						</ul>
+						</ul> --%>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
 				</div>
 				<!-- END PAGE HEADER-->
 				<!-- END DASHBOARD STATS -->
+				<%--
 				<div class="clearfix"></div>
 				<div class="row-fluid">
 					<div class="span6">sdf</div>
 					<div class="span6">gasd</div>
-				</div>
+				</div> 
+				--%>
 			</div>
+			
 		</div>
 		<!-- END PAGE CONTAINER-->
 	</div>

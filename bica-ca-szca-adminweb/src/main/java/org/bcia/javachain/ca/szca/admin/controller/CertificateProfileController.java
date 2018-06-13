@@ -25,13 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bcia.javachain.ca.szca.admin.ca.CaManagementBean;
+import org.bcia.javachain.ca.szca.admin.ra.servcie.CertProcessService;
 import org.cesecore.authentication.tokens.AuthenticationToken;
 import org.cesecore.certificates.ca.CAData;
 import org.cesecore.certificates.certificate.certextensions.CertificateExtension;
@@ -66,6 +66,8 @@ public class CertificateProfileController {
 	CaManagementBean caBean ;
 	@Autowired
 	GlobalConfigurationSessionBean globalConfigurationSessionBean;
+	@Autowired
+	CertProcessService certProcessService;
 	
 	@PersistenceContext//(unitName = CesecoreConfiguration.PERSISTENCE_UNIT)
 	private EntityManager entityManager;
@@ -175,6 +177,7 @@ public class CertificateProfileController {
 			if (auth == null)
 				throw new Exception("没有查询证书模板的权限。");
 			certificateProfileSessionBean.renameCertificateProfile(auth, oldName, newName);
+			certProcessService.updateCertProfileName(entityManager, oldName, newName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -199,10 +202,6 @@ public class CertificateProfileController {
 				throw new Exception("没有查询证书模板的权限。");
 			cfd = CertificateProfileData.findByProfileName(entityManager, profileName);
 			profileMap = JBossUnmarshaller.extractLinkedHashMap(cfd.getDataUnsafe());
-			for(Iterator it = profileMap.keySet().iterator();it.hasNext();) {
-				String key = (String) it.next();
-				System.out.println("key:value[" + key + ":" + profileMap.get(key) + "]"); 
-			}
 			AvailableCustomCertificateExtensionsConfiguration a = AvailableCustomCertificateExtensionsConfiguration.getAvailableCustomCertExtensionsFromFile();
 			certificateExtensions = a.getAllAvailableCustomCertificateExtensions();
 			

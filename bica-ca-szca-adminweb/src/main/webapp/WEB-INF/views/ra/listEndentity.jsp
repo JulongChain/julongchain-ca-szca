@@ -28,42 +28,7 @@
 <%@include file="../common/metaHead.jsp"%>
 </head>
 <script src="${pageContext.request.contextPath}/media/js/jquery-1.10.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/media/js/media/js/jquery.dataTables.js"></script>
-<script src="${pageContext.request.contextPath}/media/js/media/js/table-managed.js"></script>   
-<script src="${pageContext.request.contextPath}/media/js/media/js/select2.min.js"></script>   
  
-
-<script>
-
-		jQuery(document).ready(function() {       
-
- 		   TableManaged.init();
-
-		});
-
-
-
-
-		function viewuser(username){
- 			window.location.href="${pageContext.request.contextPath}/ra/viewendentity.html?username="+encodeURI(username);
-		}
-
-		function edituser(username){
- 			window.location.href="${pageContext.request.contextPath}/ra/editendentity.html?username="+encodeURI(username);
- 		}
-
- 
-
-		function viewcert(username){
- 			window.location.href="${pageContext.request.contextPath}/ra/viewcertificate.html?username="+encodeURI(username);
-
-		}
-
- 
-		
-	</script>
-
-
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed">
@@ -167,14 +132,22 @@
 				<!-- END PAGE HEADER-->
 
 				<!-- BEGIN PAGE CONTENT-->          
-
- 
+       <form name="listEndentityForm"  method="post" id="listEndentityForm" action="${pageContext.request.contextPath}/ra/listEndentity.html" class="form-horizontal">
+  		 <input type='hidden' name='currentPage' id='currentPage' value='${currentPage}'>
+		 <input type='hidden' name='rowsPerPage' id='rowsPerPage' value='${rowsPerPage}'>  
+  		 <c:choose>
+  						    <c:when test="${error}">
+  										<div class="control-group" style="height: 50px;"> 
+   										  ${errorMsg}
+  										  </div>
+  										</c:when>
+  								<c:otherwise> 
 				<div class="row-fluid">
 
 					<div class="span12">
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
-
+ 
 						<div class="portlet box blue">
 
 							<div class="portlet-title">
@@ -183,8 +156,21 @@
 							</div>
 
 							<div class="portlet-body">
- 								 
-								<table class="table table-striped table-hover table-bordered dataTable" id="sample_editable_1">
+ 								 			<div class="portlet-body form">
+								<!-- BEGIN FORM-->
+					  <form name="listEndentityForm"  method="post" id="listEndentityForm" action="${pageContext.request.contextPath}/ra/listEndentity.html" class="form-horizontal"> 
+   								<div class="control-group">
+										<label class="control-label">用户名</label>
+									 <div class="controls">
+									 <input name="username" value="${endEntityInformationVo.username}" type="text" placeholder="请输入用户名" class="m-wrap medium" />	<button type="submit" class="btn blue">
+											<i class="icon-ok"></i> 查询
+										</button>
+										</div>
+									</div>
+								</form>
+								<!-- END FORM-->
+							</div>
+								<table class="table table-striped table-hover table-bordered dataTable" id="example">
 
 									<thead>
 
@@ -234,7 +220,12 @@
  									</tbody>
 
 								</table>
-
+                              <div class="span12">
+									<div class="dataTables_paginate paging_bootstrap pagination">
+ 									     <szca:pager rowsCount="${totalRowsCount}" id="logPagerBar" currentPage="${currentPage}" rowsPerPage="${rowsPerPage}"/>
+ 									</div>
+								</div>
+							</div>
 							</div>
 
 						</div>
@@ -242,16 +233,17 @@
 						<!-- END EXAMPLE TABLE PORTLET-->
 
 					</div>
-
+					
+ 						</c:otherwise>
+  								 </c:choose>
+ </form>
 				</div>
 
-
- 
 
 
 				<!-- END PAGE CONTENT-->
 
-			</div>
+			</div></div></div>
 
 			<!-- END PAGE CONTAINER-->
 
@@ -263,6 +255,39 @@
 	<%@include file="../common/footer.jsp"%>
 	<!-- END FOOTER -->
 </body>
+
+    
+
+<script>
+
+$(document).ready(function() {
+   
+} );
+
+function goto_page(pageNo) {
+	//searchForm.currentPage.value=pageNo;
+	document.getElementById("currentPage").value = pageNo;
+ 	$("#listEndentityForm").submit();
+}
+		function viewuser(username){
+ 			window.location.href="${pageContext.request.contextPath}/ra/viewendentity.html?username="+encodeURI(username);
+		}
+
+		function edituser(username){
+ 			window.location.href="${pageContext.request.contextPath}/ra/editendentity.html?username="+encodeURI(username);
+ 		}
+
+ 
+
+		function viewcert(username){
+ 			window.location.href="${pageContext.request.contextPath}/ra/viewcertificate.html?username="+encodeURI(username);
+
+		}
+
+ 
+		
+	</script>
+
 <!-- END BODY -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <%@include file="../common/corePlugin.jsp"%>

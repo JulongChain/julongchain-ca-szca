@@ -21,6 +21,8 @@ package org.bcia.javachain.ca.szca.admin.controller;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,6 +31,7 @@ import org.bcia.javachain.ca.szca.admin.ca.CaManagementBean;
 import org.cesecore.authentication.tokens.AuthenticationToken;
 import org.cesecore.certificates.ca.CAData;
 import org.cesecore.certificates.ca.CAInfo;
+import org.cesecore.certificates.certificateprofile.CertificateProfileData;
 import org.cesecore.keys.token.CryptoTokenData;
 import org.cesecore.util.StringTools;
 import org.slf4j.Logger;
@@ -41,6 +44,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.szca.common.LoginUser;
 import com.szca.wfs.common.WebUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
  
 
 @Controller
@@ -52,6 +58,8 @@ public class CaManagementController {
 	CaManagementBean caBean ;
 	@Autowired
 	CADataHandlerBean caDataHandlerBean;
+	@PersistenceContext//(unitName = CesecoreConfiguration.PERSISTENCE_UNIT)
+	private EntityManager entityManager;
 	
 	@RequestMapping("/ca/caList")
 	public ModelAndView caList(HttpServletRequest request,String currentPage) {
@@ -165,6 +173,7 @@ public class CaManagementController {
 		logger.info("=========renameCA");
 		 List<CryptoTokenData> keyList =null;
 		 List<CAData> caList =null;
+		 String certProfiles = null;
 		try {
 			LoginUser user = (LoginUser) request.getSession().getAttribute(LoginUser.LOGIN_USER);
 			AuthenticationToken auth = user.getAuthenticationToken();
@@ -173,6 +182,18 @@ public class CaManagementController {
 			//cainfo = caBean.updateCaName(auth,caid,name);//importCAFromKeyStore(auth, name, p12file.getBytes(), passwd, signKey, encKey);
 			keyList = caBean.getCryptoTokenList();
 			caList = caBean.getCaList();
+			List<CertificateProfileData> cpds = CertificateProfileData.findAll(entityManager);
+			JSONArray jsonArray = new JSONArray();
+			JSONObject jsonObject = new JSONObject();
+			for(int i=0;i<cpds.size();i++) {
+				CertificateProfileData cpd = cpds.get(i);
+				jsonObject.put("type", cpd.getCertificateProfile().getType());
+				jsonObject.put("profileId", cpd.getId());
+				jsonObject.put("profileName", cpd.getCertificateProfileName());
+				jsonArray.add(jsonObject);
+			}
+			
+			certProfiles = jsonArray.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -180,6 +201,7 @@ public class CaManagementController {
 		ModelAndView view =  new ModelAndView("/ca/caWizard");
 		view.addObject("keyList", keyList);
 		view.addObject("caList", caList);
+		view.addObject("certProfiles", certProfiles);
 		return view;
 	}
 	 
@@ -195,10 +217,10 @@ public class CaManagementController {
 			// 
 			// certificateProfileId: 2=(SubCAs) SUBCA, 3=(RootCAs) ROOTCA 
 			//<!-- signedBy: 1=Self Signed, 2=External CA -->	 
-			if("1".equals(createNewCaForm.getSignedBy()))
-				createNewCaForm.setCertificateProfileId("3");
-			else
-				createNewCaForm.setCertificateProfileId("2");
+			//if("1".equals(createNewCaForm.getSignedBy()))
+			//	createNewCaForm.setCertificateProfileId("3");
+			//else
+			//	createNewCaForm.setCertificateProfileId("2");
 			//cainfo = caBean.updateCaName(auth,caid,name);//importCAFromKeyStore(auth, name, p12file.getBytes(), passwd, signKey, encKey);
 //			keyList = caBean.getCryptoTokenList();
 //			caList = caBean.getCaList();

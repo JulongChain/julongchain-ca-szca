@@ -24,8 +24,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bcia.javachain.ca.result.Result;
+import org.bcia.javachain.ca.szca.admin.privileges.vo.AccessRuleFrom;
 import org.bcia.javachain.ca.szca.admin.privileges.vo.EditBasicAccessRulesFrom;
+import org.cesecore.authorization.AuthorizationDeniedException;
+import org.cesecore.authorization.rules.AccessRuleExistsException;
 import org.cesecore.roles.RoleData;
+import org.cesecore.roles.RoleNotFoundException;
 import org.springframework.web.servlet.ModelAndView;
  
 public interface PrivilegesService {
@@ -98,6 +102,19 @@ public interface PrivilegesService {
      * @return
      */
     Result  editadminentities(HttpServletRequest request, String roleName,ModelAndView view);
+    
+    
+    /**
+    * Description:
+    * @param request
+    * @param roleName
+    * @param view
+    * @return
+    * Date: 2018年6月1日 上午11:23:29
+    * Author:power
+    * Version: 1.0
+    */
+    void  editadvancedaccessrules(HttpServletRequest request, String roleName,ModelAndView view);
     /**
     * Description:
     * @param request
@@ -139,4 +156,16 @@ public interface PrivilegesService {
     * Version: 1.0
     */
     Result addAdmin(HttpServletRequest request,String matchWith, String matchType,String matchValue,String matchCaId,String roleName) ;
+    
+    
+    /**
+    * Description:
+    * @param request
+    * @param roleName
+    * @return
+    * Date: 2018年5月25日 下午4:56:54
+    * Author:power
+    * Version: 1.0
+    */
+    void saveAdvancedAccessRules(HttpServletRequest request,String roleName,AccessRuleFrom accessRuleFrom) throws AuthorizationDeniedException, RoleNotFoundException, AccessRuleExistsException;
 }

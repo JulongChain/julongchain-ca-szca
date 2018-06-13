@@ -285,7 +285,7 @@
 	}
 
 	function editadvancedaccessrules(par) {
-		window.location.href = "${pageContext.request.contextPath}/privileges/editbasicaccessrules.html?roleName="+ encodeURI($(par).attr("attrRoleName"));
+		window.location.href = "${pageContext.request.contextPath}/privileges/editadvancedaccessrules.html?roleName="+ encodeURI($(par).attr("attrRoleName"));
 	}
 
 	function  addRole(){

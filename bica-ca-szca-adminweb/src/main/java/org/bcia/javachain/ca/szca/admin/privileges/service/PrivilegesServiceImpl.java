@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,16 +40,23 @@ import org.bcia.javachain.ca.core.model.authorization.BasicAccessRuleSet;
 import org.bcia.javachain.ca.core.model.authorization.BasicAccessRuleSetDecoder;
 import org.bcia.javachain.ca.result.Result;
 import org.bcia.javachain.ca.szca.admin.common.WebLanguages;
+import org.bcia.javachain.ca.szca.admin.privileges.vo.AccessRuleDataVo;
+import org.bcia.javachain.ca.szca.admin.privileges.vo.AccessRuleFrom;
+import org.bcia.javachain.ca.szca.admin.privileges.vo.AccessRuleVo;
 import org.bcia.javachain.ca.szca.admin.privileges.vo.AdminsMatchVo;
 import org.bcia.javachain.ca.szca.admin.privileges.vo.EditBasicAccessRulesFrom;
 import org.cesecore.authentication.tokens.AuthenticationToken;
 import org.cesecore.authorization.AuthorizationDeniedException;
+import org.cesecore.authorization.control.CryptoTokenRules;
 import org.cesecore.authorization.control.StandardRules;
 import org.cesecore.authorization.rules.AccessRuleData;
+import org.cesecore.authorization.rules.AccessRuleExistsException;
+import org.cesecore.authorization.rules.AccessRuleState;
 import org.cesecore.authorization.user.AccessMatchType;
 import org.cesecore.authorization.user.AccessUserAspectData;
 import org.cesecore.authorization.user.matchvalues.AccessMatchValue;
 import org.cesecore.authorization.user.matchvalues.AccessMatchValueReverseLookupRegistry;
+import org.cesecore.keys.token.CryptoTokenInfo;
 import org.cesecore.roles.RoleData;
 import org.cesecore.roles.RoleExistsException;
 import org.cesecore.roles.RoleNotFoundException;
@@ -66,11 +74,13 @@ import com.szca.common.LoginUser;
 import cn.net.bcia.bcca.core.ejb.authorization.ComplexAccessControlSession;
 import cn.net.bcia.bcca.core.ejb.ra.raadmin.EndEntityProfileSession;
 import cn.net.bcia.bcca.core.ejb.ra.userdatasource.UserDataSourceSession;
+import cn.net.bcia.bcca.core.ejb.ra.userdatasource.UserDataSourceSessionLocal;
 import cn.net.bcia.bcca.core.model.InternalEjbcaResources;
 import cn.net.bcia.cesecore.authorization.control.AccessControlSessionLocal;
 import cn.net.bcia.cesecore.certificates.ca.CaSessionLocal;
 import cn.net.bcia.cesecore.configuration.GlobalConfigurationSessionLocal;
 import cn.net.bcia.cesecore.keybind.InternalKeyBindingRules;
+import cn.net.bcia.cesecore.keys.token.CryptoTokenManagementSessionLocal;
 import cn.net.bcia.cesecore.roles.access.RoleAccessSessionLocal;
 import cn.net.bcia.cesecore.roles.management.RoleManagementSession;
 
@@ -103,7 +113,11 @@ public class PrivilegesServiceImpl implements PrivilegesService{
 	@Autowired
 	EndEntityProfileSession endEntityProfileSession;
 	
+	@Autowired
+	UserDataSourceSessionLocal userDataSourceSessionLocal;
 	
+	@Autowired
+	CryptoTokenManagementSessionLocal cryptoTokenManagementSessionLocal;
 	
     private static final InternalEjbcaResources intres = InternalEjbcaResources.getInstance();
     private Set<Integer> availablecas = new HashSet<Integer>();
@@ -563,4 +577,227 @@ public class PrivilegesServiceImpl implements PrivilegesService{
     }
 
 
+
+
+	@Override
+	public void editadvancedaccessrules(HttpServletRequest request, String roleName, ModelAndView view) {
+         List<AccessRuleVo> accessRuleVoList = new ArrayList<AccessRuleVo>();
+	 	 AuthenticationToken authenticationToken =getAuthenticationToken(request);
+         RoleData  role =roleAccessSessionLocal.findRole(roleName);
+        	AccessRuleDataVo accessRuleDataVo=null;
+       	Map<String, List<AccessRuleData>> allRulesViewCache= getAccessRules(role, authenticationToken);
+         for(Entry<String, List<AccessRuleData>> entry : allRulesViewCache.entrySet()) {
+        	 List<AccessRuleData> list= entry.getValue();
+        	 List<AccessRuleDataVo> collection=new ArrayList<AccessRuleDataVo>();
+         	 for(AccessRuleData rccessRuleData:list) {
+         		accessRuleDataVo=new AccessRuleDataVo();
+        		String parsedAccessRule= getParsedAccessRule(rccessRuleData, authenticationToken);
+        		accessRuleDataVo.setParsedAccessRule(parsedAccessRule);
+        		accessRuleDataVo.setState(rccessRuleData.getState());
+        		accessRuleDataVo.setRecursive(rccessRuleData.getRecursive());
+        		accessRuleDataVo.setPrimaryKey(rccessRuleData.getPrimaryKey());
+          		collection.add(accessRuleDataVo);
+         	 }
+         	 accessRuleVoList.add(new AccessRuleVo(WebLanguages.getInstance().getText(entry.getKey()), collection));
+         }
+         view.addObject("accessRuleVoList", accessRuleVoList);
+         view.addObject("roleName", roleName);
+         
+         Map<String,String> accessRuleStatesMap=new HashMap<String,String>();
+         accessRuleStatesMap.put(WebLanguages.getInstance().getText(AccessRuleState.RULE_NOTUSED.getName(), true), String.valueOf(AccessRuleState.RULE_NOTUSED.getDatabaseValue()));
+         accessRuleStatesMap.put(WebLanguages.getInstance().getText(AccessRuleState.RULE_ACCEPT.getName(), true), String.valueOf(AccessRuleState.RULE_ACCEPT.getDatabaseValue()));
+         accessRuleStatesMap.put(WebLanguages.getInstance().getText(AccessRuleState.RULE_DECLINE.getName(), true), String.valueOf(AccessRuleState.RULE_DECLINE.getDatabaseValue()));
+         view.addObject("accessRuleStatesMap", accessRuleStatesMap);
+         
+	
+	}
+
+	
+	
+ 
+	
+    /**
+     * @return a parsed version of the accessrule for the current row in the datatable. CAs, End Entity Profiles and UserDataSources are given their
+     *         cleartext name.
+     */
+    public String getParsedAccessRule(AccessRuleData accessRule,AuthenticationToken authenticationToken) {
+         String resource = accessRule.getAccessRuleName();
+        // Check if it is a profile rule, then replace profile id with profile name.
+        Map<Integer, String> profileMap =  endEntityProfileSession.getEndEntityProfileIdToNameMap();
+        if (resource.startsWith(AccessRulesConstants.ENDENTITYPROFILEPREFIX)) {
+            if (resource.lastIndexOf('/') < AccessRulesConstants.ENDENTITYPROFILEPREFIX.length()) {
+                return AccessRulesConstants.ENDENTITYPROFILEPREFIX 
+                		+ profileMap.get(Integer.parseInt(resource.substring(AccessRulesConstants.ENDENTITYPROFILEPREFIX.length())));
+            } else {
+                String tmpString = resource.substring(AccessRulesConstants.ENDENTITYPROFILEPREFIX.length());
+                return AccessRulesConstants.ENDENTITYPROFILEPREFIX
+                        + profileMap.get(
+                                Integer.parseInt(tmpString.substring(0, tmpString.indexOf('/')))) + tmpString.substring(tmpString.indexOf('/'));
+            }
+        }
+        // Check if it is a CA rule, then replace CA id with CA name.
+        if (resource.startsWith(StandardRules.CAACCESS.resource())) {
+            Map<Integer, String> caIdToNameMap =casession.getCAIdToNameMap();
+            if (resource.lastIndexOf('/') < StandardRules.CAACCESS.resource().length()) {
+                return StandardRules.CAACCESS.resource() + caIdToNameMap.get(Integer.valueOf(resource.substring(StandardRules.CAACCESS.resource().length())));
+            } else {
+                return StandardRules.CAACCESS.resource()
+                        + caIdToNameMap.get(Integer.valueOf(resource.substring(StandardRules.CAACCESS.resource().length(), resource.lastIndexOf('/'))))
+                        + resource.substring(resource.lastIndexOf('/'));
+            }
+        }
+        // Check if it is a User Data Source rule, then replace User Data Source id with User Data Source name.
+        if (resource.startsWith(AccessRulesConstants.USERDATASOURCEPREFIX)) {
+            if (resource.lastIndexOf('/') < AccessRulesConstants.USERDATASOURCEPREFIX.length()) {
+                return AccessRulesConstants.USERDATASOURCEPREFIX
+                        +  userDataSourceSessionLocal.getUserDataSourceName(authenticationToken,
+                                Integer.parseInt(resource.substring(AccessRulesConstants.USERDATASOURCEPREFIX.length())));
+            } else {
+                return AccessRulesConstants.USERDATASOURCEPREFIX
+                        + userDataSourceSessionLocal.getUserDataSourceName(authenticationToken,
+                                Integer.parseInt(resource.substring(AccessRulesConstants.USERDATASOURCEPREFIX.length(), resource.lastIndexOf('/'))))
+                        + resource.substring(resource.lastIndexOf('/'));
+            }
+        }
+        // Check if it is a CryptoToken rule, then replace CryptoToken id with CryptoToken name.
+        if (resource.startsWith(CryptoTokenRules.BASE.resource() + '/')) {
+            final int lastIndexOfSlash = resource.lastIndexOf('/');
+            try {
+                final Integer cryptoTokenId = Integer.valueOf(resource.substring(lastIndexOfSlash+1));
+                // Use local invocation without checking authorization, since we 
+                final CryptoTokenInfo cryptoTokenInfo =  cryptoTokenManagementSessionLocal.getCryptoTokenInfo(cryptoTokenId);
+                if (cryptoTokenInfo != null) {
+                    return resource.substring(0, lastIndexOfSlash+1) + cryptoTokenInfo.getName();
+                }
+            } catch (NumberFormatException e) {
+                // Ignore.. we only want to convert the ones where the last section is a number
+            }
+            return resource;
+        }
+        return resource;
+    }
+
+	
+	
+	
+	
+    /**
+     * @return a map containing all available access rules, with unauthorized CAs, End Entity Profiles, Crypto Tokens and Certificate Profiles missing. 
+     */
+
+    public Map<String, Set<String>> getRedactedAccessRules(final String endentityAccessRule, GlobalConfiguration globalconfiguration, AuthenticationToken administrator) {
+    	 Map<String, Set<String>> redactedAccessRules = complexAccessControlSession.getAllAccessRulesRedactUnauthorizedCas(administrator,
+                    globalconfiguration.getEnableEndEntityProfileLimitations(), globalconfiguration.getIssueHardwareTokens(),
+                    globalconfiguration.getEnableKeyRecovery(), endEntityProfileSession.getAuthorizedEndEntityProfileIds(administrator, endentityAccessRule),
+                    userdatasourcesession.getAuthorizedUserDataSourceIds(administrator, true), EjbcaConfiguration.getCustomAvailableAccessRules());
+        
+        return redactedAccessRules;
+    }
+	 
+    
+    /**
+     *  Takes a role and a set of rules, returning map (sorted by category) of all rules, with set states for those rules contained in the role
+     * 
+     * @param role a Role
+     * @param redactedRules a list of all rules, barring unauthorized CAs, CPs, EEPs, CryptoTokens 
+     * @return the sought map
+     */
+    private Map<String, List<AccessRuleData>> getCategorizedRuleSet(RoleData role, Map<String, Set<String>> redactedRules) {
+        Map<String, List<AccessRuleData>> result = new LinkedHashMap<String, List<AccessRuleData>>();
+        Map<Integer, AccessRuleData> knownRules = role.getAccessRules();
+        if (redactedRules != null) {
+            for (String category : redactedRules.keySet()) {
+                List<AccessRuleData> subset = new ArrayList<AccessRuleData>();
+                for (String rule : redactedRules.get(category)) {
+                    Integer key = AccessRuleData.generatePrimaryKey(role.getRoleName(), rule);
+                    if (!knownRules.containsKey(key)) {
+                        // Access rule can not be found, create a new AccessRuleData that we can return
+                        subset.add(new AccessRuleData(key.intValue(), rule, AccessRuleState.RULE_NOTUSED, false));
+                    } else {
+                        subset.add(knownRules.get(key));
+                    }
+                }
+                result.put(category, subset);
+            }
+        }
+        return result;
+    }
+
+
+
+
+	@Override
+	public void saveAdvancedAccessRules(HttpServletRequest request, String roleName,AccessRuleFrom accessRuleFrom) throws AuthorizationDeniedException, RoleNotFoundException, AccessRuleExistsException {
+        log.info("Trying to replace access rules..");
+        RoleData  role =roleAccessSessionLocal.findRole(roleName);
+	 	AuthenticationToken authenticationToken =getAuthenticationToken(request);
+        Collection<AccessRuleData> allRules = new ArrayList<AccessRuleData>();
+        Collection<AccessRuleData> toReplace = new ArrayList<AccessRuleData>();
+        List<AccessRuleData> toRemove = new ArrayList<AccessRuleData>();
+       	Map<String, List<AccessRuleData>> allRulesViewCache= getAccessRules(role, authenticationToken);
+       	List<AccessRuleDataVo>   accessRuleDataVoList =accessRuleFrom.getAccessRuleDataList();
+        for (Entry<String, List<AccessRuleData>> entry : allRulesViewCache.entrySet()) {
+         	for(AccessRuleData accessRuleData:entry.getValue()) {
+         	   	for(AccessRuleDataVo accessRuleDataVo:accessRuleDataVoList) {
+            		if(accessRuleDataVo.getPrimaryKey()==accessRuleData.getPrimaryKey()) {
+             			// set  
+             			accessRuleData.setRecursiveBool(accessRuleDataVo.isRecursive());
+            			accessRuleData.setState(accessRuleDataVo.getState());
+            			allRules.add(accessRuleData);
+            		}
+            	}
+        	}
+     
+          //  allRules.addAll(entry.getValue());
+        }
+        // Remove all access rules marked as UNUSED and replace the others
+        for (AccessRuleData ar : allRules) {
+            if (ar.getInternalState() == AccessRuleState.RULE_NOTUSED) {
+                toRemove.add(ar);
+            } else {
+                toReplace.add(ar);
+            }
+        }
+ 			 removeAccessRules(role, toRemove, authenticationToken);
+             replaceAccessRules(role, toReplace, authenticationToken);
+     }
+	
+    /**
+     * Method to remove an collection of access rules from a role.
+     * 
+     * @param accessrules a Collection of AccessRuleData containing accesss rules to remove.
+     * @throws AuthorizationDeniedException when administrator is't authorized to edit this CA.
+     * @throws RoleNotFoundException
+     */
+    public void removeAccessRules( RoleData role, Collection<AccessRuleData> accessRules,AuthenticationToken administrator) throws AuthorizationDeniedException, RoleNotFoundException {
+         Collection<AccessRuleData> rulesToRemove = new ArrayList<AccessRuleData>();
+        for(AccessRuleData rule : accessRules) {
+            if(role.getAccessRules().containsKey(rule.getPrimaryKey())) {
+                rulesToRemove.add(rule);
+            }
+        }
+        roleManagementSession.removeAccessRulesFromRole(administrator, role, rulesToRemove);
+     }
+
+    /**
+     * Method to replace an collection of access rules in a role.
+     * 
+     * @param rolename the name of the given role
+     * @param accessrules a Collection of String containing accesssrules to replace.
+     * @throws AuthorizationDeniedException when administrator is't authorized to edit this CA.
+     * @throws RoleNotFoundException if role of given name wasn't found
+     * @throws AccessRuleExistsException 
+     */
+    public void replaceAccessRules( RoleData role, Collection<AccessRuleData> accessRules,AuthenticationToken administrator) throws AuthorizationDeniedException, RoleNotFoundException, AccessRuleExistsException {
+        roleManagementSession.replaceAccessRulesInRole(administrator, role, accessRules);
+     }
+
+    
+    /** @return a cached list of all the available access rules */
+    private Map<String, List<AccessRuleData>> getAccessRules( RoleData role,AuthenticationToken authenticationToken) {
+     	 GlobalConfiguration globalconfiguration= (GlobalConfiguration) globalConfigSession.getCachedConfiguration(GlobalConfiguration.GLOBAL_CONFIGURATION_ID);
+         Map<String, Set<String>> redactedRules = getRedactedAccessRules(AccessRulesConstants.CREATE_END_ENTITY, globalconfiguration, authenticationToken);
+       	 Map<String, List<AccessRuleData>>    allRulesViewCache = getCategorizedRuleSet(role, redactedRules); 
+         return allRulesViewCache;
+    }
 }

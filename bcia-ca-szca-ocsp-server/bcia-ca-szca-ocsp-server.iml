@@ -85,5 +85,6 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.59" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.59" level="project" />
     <orderEntry type="library" name="Maven: com.novell.ldap:jldap:2009-10-07" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.2.5.Final" level="project" />
   </component>
 </module>

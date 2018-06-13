@@ -19,16 +19,12 @@
 
 package org.bcia.javachain.ca.szca.admin.ra.controller;
 
-import java.util.List;
-
-import javax.ejb.FinderException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bcia.javachain.ca.result.Result;
-import org.bcia.javachain.ca.szca.admin.common.WebLanguages;
 import org.bcia.javachain.ca.szca.admin.ra.servcie.RaFunctionsService;
-import org.bcia.javachain.ca.szca.admin.ra.vo.EndEntityInfoVo;
 import org.bcia.javachain.ca.szca.admin.ra.vo.EndEntityInformationVo;
+import org.ejbca.util.query.IllegalQueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.szca.wfs.common.BaseForm;
 
 import net.sf.json.JSONObject;
 
@@ -130,24 +128,20 @@ public class RaFunctionsController {
 	
 	
 	
+	 
 	
 	
 	
-	
-	@RequestMapping(value = "/listEndentity", method = {RequestMethod.GET })
- 	public ModelAndView listEndentity(HttpServletRequest request,EndEntityInformationVo endEntityInformationVo) {
+	@RequestMapping(value = "/listEndentity", method = {RequestMethod.GET,RequestMethod.POST })
+ 	public ModelAndView listEndentity(HttpServletRequest request,EndEntityInformationVo endEntityInformationVo,BaseForm baseForm) {
 		   ModelAndView view = new ModelAndView("/ra/listEndentity");
- 		try {
-			List<EndEntityInfoVo> list = raFunctionsService.findAllUsers(request, 0, 15);
- 			view.addObject("list", list);
- 			view.addObject("VIEWENDENTITY", WebLanguages.getInstance().getText("VIEWENDENTITY"));
- 			view.addObject("EDITENDENTITY", WebLanguages.getInstance().getText("EDITENDENTITY"));
- 			view.addObject("VIEWCERTIFICATES", WebLanguages.getInstance().getText("VIEWCERTIFICATES"));
- 			view.addObject("VIEWHARDTOKENS", WebLanguages.getInstance().getText("VIEWHARDTOKENS"));
- 			view.addObject("VIEWHISTORY", WebLanguages.getInstance().getText("VIEWHISTORY"));
-  		} catch (FinderException e) {
+  		   try {
+			raFunctionsService.findAllUsers(request,baseForm,view,endEntityInformationVo);
+		   } catch (IllegalQueryException e) {
  			e.printStackTrace();
- 		}
-          return view;
+ 			view.addObject("error", true);
+ 			view.addObject("errorMsg", "Illegal Query");
+		    }
+           return view;
 	}
 }

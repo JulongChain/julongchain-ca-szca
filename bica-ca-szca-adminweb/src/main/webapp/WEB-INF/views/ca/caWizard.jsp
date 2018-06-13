@@ -152,6 +152,8 @@
 														<select name="signatureAlgorithm" id="signatureAlgorithm_list" class="span6">
 															 <option value="SHA256WithRSA">SHA256WithRSA</option>
 															 <option value="SHA1WithRSA">SHA1WithRSA</option>
+															 <option value="SHA256WithRSA">SHA256WithECDSA</option>
+															 <option value="SHA1WithRSA">SHA1WithECDSA</option>
 															 <option value="SM3WithSM2">SM3WithSM2</option>
 															</select>
 															
@@ -229,7 +231,7 @@
 													<div class="controls">
 													<!-- signedBy: 1=Self Signed, 2=External CA -->
 													<!-- <input type="hidden" name="signedBy" value="1"> -->
-														<select name="signedBy" id="issuerCaId_list" class="span6">
+														<select name="signedBy" id="issuerCaId_list" class="span6" onchange="loadCertProfile()">
 															<option value="1">自签名CA证书</option>
 															<c:forEach items="${caList}" var="ca">
 																<option value="${ca.caId}">${ca.caId}-${ca.name}</option>
@@ -241,6 +243,14 @@
 													</div>
 												</div>
 												
+												<div class="control-group">
+													<label class="control-label">证书模板<span class="required">*</span></label>
+													<div class="controls">
+														<select name="certificateProfileId" id="certificateProfileId_list" class="span6">
+															
+														</select>
+													</div>
+												</div>
 												
 												<div class="control-group">
 													<label class="control-label">有效期</label>
@@ -275,10 +285,10 @@
 														<!-- 
 														<input type="text" class="span6 m-wrap" name="akid" />
 														 -->
-														<label class="radio"> <input type="checkbox" name="akid" value="use" data-title="使用" /> 使用
+														<label class="radio"> <input type="checkbox" name="useAuthorityKeyIdentifier" value="true" data-title="使用" /> 使用
 														</label>
 														<div class="clearfix"></div>
-														<label class="radio"> <input type="checkbox" name="akid" value="critical" data-title="关键" checked /> 关键
+														<label class="radio"> <input type="checkbox" name="akid" value="critical" data-title="关键"  /> 关键
 														</label> <span class="help-inline"></span>
 													</div>
 												</div>
@@ -288,7 +298,7 @@
 														<label class="radio"> <input type="checkbox" name="crlNum" value="use" data-title="使用" /> 使用
 														</label>
 														<div class="clearfix"></div>
-														<label class="radio"> <input type="checkbox" name="crlNum" value="critical" data-title="关键" checked /> 关键 <span class="help-inline"></span>
+														<label class="radio"> <input type="checkbox" name="crlNum" value="critical" data-title="关键"  /> 关键 <span class="help-inline"></span>
 														</label>
 													</div>
 												</div>
@@ -411,6 +421,7 @@
 function createNewCa(){
 	
 }
+
 </script>
 <!-- END BODY -->
 <%----%>
@@ -455,6 +466,28 @@ function createNewCa(){
 		FormWizard.init();
 
 	});
+	
+	function loadCertProfile(){
+		var issuerId = $('#issuerCaId_list').val();
+		var sels = $("#certificateProfileId_list");
+		var jsonObj =  eval('(${certProfiles })');
+		sels.empty(); 
+		if(issuerId == 1)
+			sels.append("<option value='3'>ROOTCA</option>");//添加option
+		else
+			sels.append("<option value='2'>SUBCA</option>");//添加option
+		for(var i=0;i<jsonObj.length;i++){
+			if(issuerId == 1){
+				if(jsonObj[i].type == 8)
+					sels.append("<option value='" + jsonObj[i].profileId + "'>" + jsonObj[i].profileName + "</option>");//添加option
+			}else{
+				if(jsonObj[i].type == 2)
+					sels.append("<option value='" + jsonObj[i].profileId + "'>" + jsonObj[i].profileName + "</option>");//添加option
+			}
+		}
+		
+	}
+	loadCertProfile();
 </script>
 <!-- END JAVASCRIPTS -->
 </html>

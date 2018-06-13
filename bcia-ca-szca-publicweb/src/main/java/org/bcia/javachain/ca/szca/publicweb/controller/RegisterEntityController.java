@@ -1,111 +1,130 @@
 /*
- * **
- *  *
- *  * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- *  * Copyright © 2018  SZCA. All Rights Reserved.
- *  * <p>
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  * <p>
- *  * http://www.apache.org/licenses/LICENSE-2.0
- *  * <p>
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *
+ *
+ * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright © 2018  SZCA. All Rights Reserved.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.bcia.javachain.ca.szca.publicweb.entity.CertProcessData;
+import org.bcia.javachain.ca.szca.publicweb.service.RegisterEntityService;
 import org.cesecore.authentication.tokens.AuthenticationToken;
-import org.cesecore.certificates.ca.CAData;
+import org.cesecore.certificates.certificate.certextensions.CustomCertificateExtension;
+import org.cesecore.certificates.certificateprofile.CertificateProfileData;
 import org.cesecore.certificates.endentity.EndEntityInformation;
-import org.cesecore.certificates.endentity.EndEntityType;
-import org.cesecore.certificates.endentity.EndEntityTypes;
+import org.ejbca.core.ejb.ra.raadmin.EndEntityProfileData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.szca.common.AjaxActionResult;
+import cn.net.bcia.cesecore.certificates.ca.CaSessionLocal;
+
+
+
 
 @Controller
 public class RegisterEntityController extends BaseController{
- 
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@PersistenceContext//(unitName = CesecoreConfiguration.PERSISTENCE_UNIT)
+	private EntityManager entityManager;
+	@Autowired 
+	RegisterEntityService  registerEntityService;
+	@Autowired
+	CaSessionLocal caSession;
+
+	
 	@RequestMapping("/registerEntity")
-	public ModelAndView register(HttpServletRequest req, HttpServletResponse res) throws Exception{
-		List<CAData> caList = apiService.getCaList();
-		ModelAndView view= new ModelAndView("registerEntity");
-		view.addObject("caList", caList);
-		return view;
-	}
-  
-	@RequestMapping("/addEntity")
-	public void addEntity(HttpServletRequest req, HttpServletResponse res) {
-		 
-		String user = req.getParameter("user");
-		String password = req.getParameter("password");
-		String subjectDn = req.getParameter("subjectDn");
- 		String subjectAltName = req.getParameter("subjectAltName");
- 		String caId = req.getParameter("caId");
-//		String keylength = req.getParameter("keylength");
-//		String keyalg = req.getParameter("keyalg");
-//		String tokenKeySpec = req.getParameter("tokenKeySpec");
-//		String resulttype = req.getParameter("resulttype");
-//		String csr = req.getParameter("csr");
- 		password = "Bcia12";
- 		AjaxActionResult result = new AjaxActionResult();
+	public ModelAndView applyEntitys(HttpServletRequest request,String currentPage) {
+		logger.info("==========registerEntity");
+		List<CertProcessData> certProcessDatas = null;
+		String msg = null;
 		try {
-		 	
-			AuthenticationToken admin =  this.getAuthenticationToken(req);
-			EndEntityInformation entity = new EndEntityInformation();
-			entity.setEndEntityProfileId(1);
-			entity.setCertificateProfileId(1);
-			entity.setAdministrator(false);
-			entity.setDN(subjectDn);
-			//entity.setPassword(password);
-			//entity.setCAId(-1296285382);
-			entity.setCAId(Integer.parseInt(caId));
-			entity.setUsername(user);
-			entity.setTokenType(2);
-			entity.setSubjectAltName(subjectAltName);
-			entity.setType(new EndEntityType(EndEntityTypes.ENDUSER));
-			String newPwd = apiService.addEndEntity(admin, entity);
-			 
-			result.setResultCode(0);
-			result.setSuccess(true);
-			//"成功注册实体[%s],注册密码是%s请牢记此密码。"
-			String msg=this.getMessage(req, "register.addentity.success");
-			result.setMessage(String.format(msg,user,newPwd));
+			certProcessDatas = registerEntityService.getValidCertProccessList(entityManager);
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = String.format("Cert Process Search Failed: " + e.getMessage());
+		}
+		
+		ModelAndView view = new ModelAndView("/registerEntity");
+		view.addObject("certProcessDatas", certProcessDatas);
+		view.addObject("msg", msg);
+		return view;
+
+	}
+	
+	@RequestMapping("/addEntity")
+	public ModelAndView addEntity(HttpServletRequest request,String currentPage) {
+		logger.info("==========addEntity");
+		String msg = null;
+		LinkedHashMap<String, Object> tranProfileMap = null;
+		CertProcessData certProcessData = null;
+		List<CustomCertificateExtension> certificateExtensions = null;
+		try {
+			long processId = Long.valueOf(request.getParameter("processId"));
+			certProcessData = registerEntityService.getCertProccess(entityManager, processId);
+			EndEntityProfileData epd = EndEntityProfileData.findByProfileName(entityManager, certProcessData.getEndEntityProfileName());
+			CertificateProfileData cpd = CertificateProfileData.findByProfileName(entityManager, certProcessData.getCertProfileName());
+			tranProfileMap = registerEntityService.loadProcessEntityDn(entityManager, epd);
+			if((boolean) tranProfileMap.get("USEEXTENSIONDATA"))
+				certificateExtensions = registerEntityService.getCustomCertificateExtension(entityManager, cpd);
 			
 		} catch (Exception e) {
-			//"注册实体[%s]失败:%s。"
-			String msg = String.format(this.getMessage(req, "register.addentity.failed"),user,e.getMessage());
-			logger.error(msg);
-			result.setResultCode(-1);
-			result.setSuccess(false);
-			result.setMessage(msg);
 			e.printStackTrace();
+			msg = String.format("Cert Process Search Failed: " + e.getMessage());
 		}
-		 
-		try {
-			res.setContentType("text/json;charset=utf-8");
-			res.getWriter().write(result.getJSONString());
-			res.getWriter().flush();
-			res.getWriter().close();
-		} catch (Exception e) {
-			String msg = String.format("注册实体[%s]失败:%s。",user,e.getMessage());
-			logger.error(msg);
-			e.printStackTrace();
-		}
+		
+		ModelAndView view = new ModelAndView("/addEntity");
+		view.addObject("tranProfileMap", tranProfileMap);
+		view.addObject("certProcessData", certProcessData);
+		view.addObject("certificateExtensions",certificateExtensions);
+		view.addObject("msg", msg);
+		return view;
+
 	}
- 
+	
+	@RequestMapping("/handleEntity")
+	public ModelAndView handleEntity(HttpServletRequest request,String currentPage) {
+		logger.info("==========handleEntity");
+		String msg = null;
+		try {
+			AuthenticationToken admin =  this.getAuthenticationToken(request);
+			EndEntityInformation entity = registerEntityService.createEndEntityInformation(entityManager,request);
+			apiService.addEndEntityWithPassword(admin, entity);
+			msg = String.format("实体注册成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = String.format("实体注册失败: " + e.getMessage());
+		}
+		
+		ModelAndView view = new ModelAndView("/handleEntity");
+		view.addObject("msg", msg);
+		return view;
+
+	}
+	
+	
 }
