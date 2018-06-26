@@ -1,8 +1,7 @@
  
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb;
@@ -42,14 +40,14 @@ import org.slf4j.LoggerFactory;
 public class BciaGenerateToken {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(BciaGenerateToken.class);
 
-	private cn.net.bcia.bcca.core.ejb.ca.auth.EndEntityAuthenticationSession authenticationSession;
-	private cn.net.bcia.bcca.core.ejb.ra.EndEntityAccessSession endEntityAccessSession;
-	private cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSession endEntityManagementSession;
-	private cn.net.bcia.cesecore.certificates.ca.CaSession caSession;
-	private cn.net.bcia.bcca.core.ejb.keyrecovery.KeyRecoverySession keyRecoverySession;
-	private cn.net.bcia.bcca.core.ejb.ca.sign.SignSession signSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.auth.EndEntityAuthenticationSession authenticationSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityAccessSession endEntityAccessSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSession endEntityManagementSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSession caSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.keyrecovery.KeyRecoverySession keyRecoverySession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.sign.SignSession signSession;
 	
-    public BciaGenerateToken(cn.net.bcia.bcca.core.ejb.ca.auth.EndEntityAuthenticationSession authenticationSession, cn.net.bcia.bcca.core.ejb.ra.EndEntityAccessSession endEntityAccessSession, cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSession endEntityManagementSession, cn.net.bcia.cesecore.certificates.ca.CaSession caSession, cn.net.bcia.bcca.core.ejb.keyrecovery.KeyRecoverySession keyRecoverySession, cn.net.bcia.bcca.core.ejb.ca.sign.SignSession signSession) {
+    public BciaGenerateToken(org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.auth.EndEntityAuthenticationSession authenticationSession, org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityAccessSession endEntityAccessSession, org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSession endEntityManagementSession, org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSession caSession, org.bcia.javachain.ca.szca.common.bcca.core.ejb.keyrecovery.KeyRecoverySession keyRecoverySession, org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.sign.SignSession signSession) {
     	this.authenticationSession = authenticationSession;
     	this.endEntityAccessSession = endEntityAccessSession;
     	this.endEntityManagementSession = endEntityManagementSession;

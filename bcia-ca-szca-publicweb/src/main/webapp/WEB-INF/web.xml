@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!--
-  ~
-  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
-  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright ? 2018  SZCA. All Rights Reserved.
   ~ <p>
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +14,6 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  ~
   -->
 
 <!--
@@ -78,7 +76,7 @@
     <servlet>
         <display-name>CertDistServlet</display-name>
         <servlet-name>CertDist</servlet-name>
-        <servlet-class>cn.net.bcia.ca.szca.ui.web.pub.CertDistServlet</servlet-class>
+        <servlet-class>org.bcia.javachain.ca.szca.common.ca.szca.ui.web.pub.CertDistServlet</servlet-class>
     </servlet>
     <servlet-mapping>
 	    <servlet-name>CertDist</servlet-name>

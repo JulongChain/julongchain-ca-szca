@@ -1,8 +1,7 @@
 
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb;
@@ -77,8 +75,8 @@ import org.ejbca.ui.web.CertificateResponseType;
 import org.ejbca.ui.web.pub.ServletUtils;
 import org.slf4j.LoggerFactory;
 
-import cn.net.bcia.bcca.core.ejb.ca.sign.SignSessionLocal;
-import cn.net.bcia.cesecore.certificates.ca.CaSessionLocal;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.sign.SignSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal;
 
  
 public class BciaRequestHelper {
@@ -289,7 +287,7 @@ public class BciaRequestHelper {
         return pkcs10CertRequest(signsession, caSession, b64Encoded, username, password, CertificateResponseType.fromNumber(resulttype), doSplitLines).getEncoded();
     }
     
-    public CertificateRequestResponse pkcs10CertRequest(SignSessionLocal signsession, cn.net.bcia.cesecore.certificates.ca.CaSessionLocal caSession, byte[] b64Encoded, String username, String password,
+    public CertificateRequestResponse pkcs10CertRequest(SignSessionLocal signsession, org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal caSession, byte[] b64Encoded, String username, String password,
             CertificateResponseType resulttype) throws CertificateEncodingException, CertificateException, EjbcaException, CesecoreException,
             AuthorizationDeniedException, IOException, CertificateExtensionException {
         return pkcs10CertRequest(signsession, caSession, b64Encoded, username, password, resulttype, true);

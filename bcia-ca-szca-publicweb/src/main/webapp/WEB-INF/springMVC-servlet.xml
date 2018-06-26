@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~
-  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
-  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright ? 2018  SZCA. All Rights Reserved.
   ~ <p>
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +14,6 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  ~
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -49,7 +47,7 @@
 	</bean>
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:component-scan
-		base-package="cn.net.bcia,org.bcia.javachain" />
+		base-package="org.bcia.javachain" />
 
 	<!-- **************************************************************************************************************** -->
 	<!-- ***************方法2===JPA=START*************** -->
@@ -66,7 +64,7 @@
 			/> -->
 		<!--待扫描的实体类包，不再需要persistence.xml了 -->
 		<property name="packagesToScan"
-			value="cn.net.bcia,org.bcia.javachain.ca.szca,com.szca.hello,org.cesecore,org.ejbca" />
+			value="org.bcia.javachain.ca.szca,com.szca.hello,org.cesecore,org.ejbca" />
 		<property name="mappingResources">
 			<array>
 				<value>bcia-szca-mysql.hbm.xml</value>

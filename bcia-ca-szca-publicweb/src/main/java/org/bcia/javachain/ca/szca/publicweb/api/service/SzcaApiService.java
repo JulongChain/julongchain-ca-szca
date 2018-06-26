@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.api.service;
@@ -52,8 +50,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSession;
-import cn.net.bcia.cesecore.certificates.certificate.CertificateStoreSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSession;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.certificate.CertificateStoreSession;
 
 @Repository
 public class SzcaApiService implements ISzcaApiService {
