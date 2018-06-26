@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ <p>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ <p>
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ <p>
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="  
+	    http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd  
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd  
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd  
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+        default-lazy-init="false">
+
+	<description>BCIA Administration Console SpringMVC Configuration
+	</description>
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<!--<property name="jndiName" value="java:comp/env/jdbc/mysql-sshds" /> -->
+		<property name="jndiName" value="java:comp/env/jdbc/BciaDS" />
+	</bean>
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="cn.net.bcia,com.szca,org.bcia.javachain" />
+	<task:annotation-driven />
+	
+  	<aop:aspectj-autoproxy proxy-target-class="true"/>
+  		
+	<bean id="springUtils" class="org.bcia.javachain.ca.szca.util.SpringUtils"/>
+
+	<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+  	
+  	
+  	
+	<!-- ================================== =============================== -->
+	<!-- =========方法1===SessionFactory=START===== -->
+	<!-- ================================== ================================ -->
+	<!-- ======Start===Hibernate==sessionFactory===当xxxDao中使用@Autowired private 
+		SessionFactory sessionFactory导入依赖时需要使用==JPA不需要此sessionFactory==如本项目中的com.szca.hello.ssh包中的例子== -->
+ 
+
+	<!--===Hibernate=sessionFactory=事务管理器的名称，若此事务管理器不是默认的事务管理器，则需要在代码中指定==如GroupServiceImpl中的@Transactional(transactionManager="sshTransactionManager"),，否则系统代码会在sessionFactory.getCurrentSession()时抛出异常== -->
+	<!-- 
+	<bean id="sshTransactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+ 	-->
+	<!-- ================================== ================================= -->
+	<!-- =========方法1===SessionFactory=END====== -->
+	<!-- ================================== ================================= -->
+
+
+	<!-- **************************************************************************************************************** -->
+	<!-- ***************方法2===JPA=START*************** -->
+	<!-- ****************************************************************************************************************** -->
+
+	<!-- JPA实体管理工厂的配置=====当xxxDao中使用@PersistenceContext private EntityManager 
+		entityManager 导入依赖时需要使用===如本项目中的com.szca.hello.jpa包中的例子=== -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<!--待扫描的实体类包，不再需要persistence.xml了 -->
+	       <property name="packagesToScan">  
+	       <array>
+	       		<value>org.bcia.javachain</value> 
+                <value>cn.net.bcia</value>  
+                <value>com.szca.hello.ssh.entity</value>  
+            </array>
+              </property>
+              <!-- 指定mappingResources，用於映射EJBCA的原有的配置 -->
+ 			<property name="mappingResources">
+				<array>
+			
+					<value>bcia-szca-mysql.hbm.xml</value>
+				</array>
+			</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!--指定实现JPA的适配器 -->
+
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<!-- 指定数据库最低版本，必须5.7及以上 ,否则初始化系统时会有异常-->
+		<property name="databasePlatform" value="org.hibernate.dialect.MySQL57Dialect" />
+	</bean>
+
+	<!-- Jpa 事务配置 -->
+	<!--===Jpa事务管理器的名称，若此事务管理器不是默认的事务管理器，则需要在代码中指定==如UserServiceImpl中的@Transactional(transactionManager="jpaTransactionManager")，否则系统会commit失败（但也不会抛出异常）== -->
+
+	<bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Spring Data Jpa配置 -->
+	<!-- <jpa:repositories base-package="cn.ibeans" transaction-manager-ref="transactionManager" 
+		entity-manager-factory-ref="entityManagerFactory"/> -->
+
+	<!-- ********************************************************************************************************************************** -->
+	<!-- ***************方法2===JPA=END*************** -->
+	<!-- ********************************************************************************************************************************** -->
+
+	<!-- =====******方法3===JDBC=START******=====start of transaction-manager 
+		FOR JDBC====JDBC事务管理器========== -->
+	<bean id="jdbcTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- =====******方法3===JDBC=END******=====start of transaction-manager FOR 
+		JDBC====JDBC事务管理器========== -->
+
+
+	<!-- 使用annotation定义默认的事务管理器==在代码的@Transactional中，若无指定参数transactionManager的值，即使用此事务管理器。==若不配置默认事务管理器，正直需要commit时会抛出异常= -->
+	<!-- -->
+	<tx:annotation-driven transaction-manager="jpaTransactionManager"
+		proxy-target-class="true" />
+
+	<!-- JSR303 Validator定义
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" /> -->
+
+
+	<!-- start of interceptors -->
+	<!-- 在UserLoginInterceptor中使用注入的注释来控制权限，使用DefaultAnnotationHandlerMapping只能返回Controller对象，不会映射到Controller中的方法级别，无法得到在Controller方法上通过AuthPassport注入的权限。 
+		必须使用RequestMappingHandlerMapping -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"> -->
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<!-- 顺序是先检查登录，再检查权限，不能乱 -->	<!-- <bean class="cn.szca.wfs.interceptor.UserLoginInterceptor" /> -->
+				<bean class="com.szca.common.interceptor.CertificateInterceptor" />
+
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="cfgProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:cfg.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="UTF-8"></property>
+	</bean>
+	<!-- org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter要与 
+		org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping匹配，同时配置才能正常使用 -->
+	<!-- -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
+	<!-- end of interceptors -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+
+
+    <mvc:annotation-driven>
+       <!-- 这里配置IE的json格式兼容性 -->
+	   <mvc:message-converters register-defaults="false">
+               <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+                    <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+               <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                  <property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+               </bean>
+               <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                  <property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+               </bean>
+            </mvc:message-converters>
+     </mvc:annotation-driven>
+
+	<!-- 上传文件 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 最大文件大小 20M -->
+		<property name="maxUploadSize" value="20480000" />
+		<!-- <property name="maxInMemorySize" value="4096" /> -->
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+</beans>  
