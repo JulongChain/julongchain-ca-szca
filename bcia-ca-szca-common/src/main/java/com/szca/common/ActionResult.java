@@ -22,7 +22,9 @@ public class ActionResult {
 	protected Throwable exception;
 	protected String message;
 	protected int resultCode;
-	 
+
+
+
 	public boolean isSuccess() {
 		return success;
 	}
