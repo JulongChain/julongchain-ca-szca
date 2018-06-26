@@ -1,9 +1,8 @@
 
 
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +15,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.ca;
@@ -74,10 +72,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.net.bcia.bcca.core.ejb.ca.caadmin.CAAdminSession;
-import cn.net.bcia.cesecore.certificates.ca.CaSessionLocal;
-import cn.net.bcia.cesecore.certificates.certificateprofile.CertificateProfileSessionLocal;
-import cn.net.bcia.cesecore.keys.token.CryptoTokenManagementSessionLocal;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.caadmin.CAAdminSession;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.certificateprofile.CertificateProfileSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.keys.token.CryptoTokenManagementSessionLocal;
 
 
 @Repository
@@ -98,7 +96,7 @@ public class CaManagementBean implements Serializable {
 //	@Autowired
 //	CADataHandler  cadatahandler;
 	// @Autowired
-	// private cn.net.bcia.cesecore.certificates.crl.CrlStoreSession
+	// private org.bcia.javachain.ca.szca.common.cesecore.certificates.crl.CrlStoreSession
 	// crlStoreSession;
 	// @Autowired
 	// private PublishingCrlSessionLocal publishingCrlSession;
@@ -114,7 +112,7 @@ public class CaManagementBean implements Serializable {
 	CertificateProfileSessionLocal  certificateProfileSession;
 	
 	@Autowired
-	private cn.net.bcia.cesecore.authorization.control.AccessControlSessionLocal accessControlSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.authorization.control.AccessControlSessionLocal accessControlSession;
 
 	  @Autowired
 	  private CryptoTokenManagementSessionLocal cryptoTokenManagementSession;

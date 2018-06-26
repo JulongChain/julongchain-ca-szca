@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.privileges.service;
@@ -71,18 +69,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.szca.common.LoginUser;
 
-import cn.net.bcia.bcca.core.ejb.authorization.ComplexAccessControlSession;
-import cn.net.bcia.bcca.core.ejb.ra.raadmin.EndEntityProfileSession;
-import cn.net.bcia.bcca.core.ejb.ra.userdatasource.UserDataSourceSession;
-import cn.net.bcia.bcca.core.ejb.ra.userdatasource.UserDataSourceSessionLocal;
-import cn.net.bcia.bcca.core.model.InternalEjbcaResources;
-import cn.net.bcia.cesecore.authorization.control.AccessControlSessionLocal;
-import cn.net.bcia.cesecore.certificates.ca.CaSessionLocal;
-import cn.net.bcia.cesecore.configuration.GlobalConfigurationSessionLocal;
-import cn.net.bcia.cesecore.keybind.InternalKeyBindingRules;
-import cn.net.bcia.cesecore.keys.token.CryptoTokenManagementSessionLocal;
-import cn.net.bcia.cesecore.roles.access.RoleAccessSessionLocal;
-import cn.net.bcia.cesecore.roles.management.RoleManagementSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.authorization.ComplexAccessControlSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.raadmin.EndEntityProfileSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.userdatasource.UserDataSourceSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.userdatasource.UserDataSourceSessionLocal;
+import org.bcia.javachain.ca.szca.common.bcca.core.model.InternalEjbcaResources;
+import org.bcia.javachain.ca.szca.common.cesecore.authorization.control.AccessControlSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.configuration.GlobalConfigurationSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.keybind.InternalKeyBindingRules;
+import org.bcia.javachain.ca.szca.common.cesecore.keys.token.CryptoTokenManagementSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.roles.access.RoleAccessSessionLocal;
+import org.bcia.javachain.ca.szca.common.cesecore.roles.management.RoleManagementSession;
 
 @Service
 public class PrivilegesServiceImpl implements PrivilegesService{
