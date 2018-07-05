@@ -62,7 +62,12 @@
 						</h3>
 						<ul class="breadcrumb">
 							<li><i class="icon-home"></i> <a href="index.html">CA功能</a> <i class="icon-angle-right"></i></li>
-							<li><a href="#">密钥库详情</a></li>
+                            <li>
+                                <a href="#">
+                                    <c:if test="${empty cryptoTokenGuiInfo}">创建密钥库容器</c:if>
+                                    <c:if test="${!empty cryptoTokenGuiInfo}">密钥库详情</c:if>
+                                </a>
+                            </li>
 							<li class="pull-right no-text-shadow">
 								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top"
 									data-original-title="Change dashboard date range">
