@@ -59,12 +59,12 @@
 			<div class="row-fluid">
 				<div class="span12">
 					<h3 class="page-title">
-						Form Wizard <small>form wizard sample</small>
+						创建CA
 					</h3>
 					<ul class="breadcrumb">
-						<li><i class="icon-home"></i> <a href="index.html">Home</a> <span class="icon-angle-right"></span></li>
-						<li><a href="#">Form Stuff</a> <span class="icon-angle-right"></span></li>
-						<li><a href="#">Form Wizard</a></li>
+						<li><i class="icon-home"></i> <a href="caList.html">CA功能</a> <span class="icon-angle-right"></span></li>
+						<li><a href="#">CA配置管理</a> <span class="icon-angle-right"></span></li>
+						<li><a href="#">创建CA</a></li>
 					</ul>
 				</div>
 			</div>
@@ -77,9 +77,10 @@
 							<div class="caption">
 								<i class="icon-reorder"></i> 创建CA - <span class="step-title">Step 1 of 4</span>
 							</div>
+							<!--
 							<div class="tools hidden-phone">
 								<a href="javascript:;" class="collapse"></a> <a href="#portlet-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="reload"></a> <a href="javascript:;" class="remove"></a>
-							</div>
+							</div>-->
 						</div>
 						<div class="portlet-body form">
 							<form action="createNewCA.html" class="form-horizontal" id="submit_form" name="submit_form" method="post">

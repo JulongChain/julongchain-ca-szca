@@ -61,7 +61,8 @@
 						授权CA列表 <small></small>
 					</h3>
 					<ul class="breadcrumb">
-						<li><i class="icon-home"></i> <a href="index.html">CA配置管理</a> <i class="icon-angle-right"></i></li>
+						<li><i class="icon-home"></i> <a href="caList.html">CA功能</a> <i class="icon-angle-right"></i></li>
+						<li><a href="#">CA配置管理</a> <span class="icon-angle-right"></span></li>
 						<li><a href="#">授权CA列表</a></li>
 						<li class="pull-right no-text-shadow">
 							<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top"
