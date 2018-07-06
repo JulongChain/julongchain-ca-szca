@@ -63,6 +63,7 @@ import org.cesecore.keys.token.CryptoTokenNameInUseException;
 import org.cesecore.keys.token.CryptoTokenOfflineException;
 import org.cesecore.keys.token.SoftCryptoToken;
 import org.cesecore.util.CertTools;
+import org.cesecore.util.SimpleTime;
 import org.cesecore.util.StringTools;
 import org.cesecore.util.ValidityDate;
 import org.ejbca.core.model.ca.caadmin.extendedcaservices.CmsCAServiceInfo;
@@ -360,7 +361,7 @@ public class CaManagementBean implements Serializable {
 	                    form.getDescription(), form.getValidityString(), form.getApprovalSettingValues(),form.getNumOfReqApprovalsParam(), form.isFinishUser() ,
 	                    form.isDoEnforceUniquePublicKeys(), form.isDoEnforceUniqueDistinguishedName(), form.isDoEnforceUniqueSubjectDNSerialnumber() ,
 	                    form.isUseCertReqHistory() , form.isUseUserStorage(), form.isUseCertificateStorage(), form.getSubjectAltName(),form.getPolicyId() ,
-	                    form.isUseAuthorityKeyIdentifier(),   form.isAuthorityKeyIdentifierCritical(), form.getCrlPeriod() , form.getCrlIssueInterval() ,
+	                    form.isUseAuthorityKeyIdentifier(),   form.isAuthorityKeyIdentifierCritical(), form.getCrlPeriod() * SimpleTime.MILLISECONDS_PER_DAY, form.getCrlIssueInterval() ,
 	                    form.getCrlOverlapTime() , form.getDeltaCrlPeriod() , form.getAvailablePublisherValues() , form.isUseCrlNumber() , form.isCrlNumberCritical(),
 	                    form.getDefaultCrlDistpoint() , form.getDefaultCrlIssuer() , form.getDefaultOcspLocator() , form.getAuthorityInformationAccess(),
 	                    form.getNameConstraintsPermitted(), form.getNameConstraintsExcluded(),

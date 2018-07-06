@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.controller;
@@ -23,20 +21,20 @@ public class CreateNewCaForm {
 //	private String caName;
 //	private String caType;
 //	private String algorithm;
-//	
+//
 //	private String subjectAlternativeName;
 //	private String cryptoTokenId;
 //	private String subjectDn;
 // 	private String issuerCaId;
-//	
+//
 //	private String certPolicyId;
 //	private String akid;
 //	private String crlNum;
 //	private String alias;
 //	private String password;
-	
-	
-	
+
+
+
 	private String  caName  ;
 	private String signatureAlgorithm   ;//= requestMap.get(HIDDEN_CASIGNALGO);
 	private String signKeySpec  ;//= requestMap.get(SELECT_KEYSIZE);
@@ -47,53 +45,53 @@ public class CreateNewCaForm {
 	private String subjectDn  ;//= requestMap.get(TEXTFIELD_SUBJECTDN);
 	private String certificateProfileId  ;//= requestMap.get(SELECT_CERTIFICATEPROFILE);
 	private String signedBy  ;//= requestMap.get(SELECT_SIGNEDBY);
-    private String description ;// = requestMap.get(TEXTFIELD_DESCRIPTION);
-    private String validityString  ;//= requestMap.get(TEXTFIELD_VALIDITY);
-    private String approvalSettingValues  ;//= requestMap.get(SELECT_APPROVALSETTINGS);//request.getParameterValues(SELECT_APPROVALSETTINGS);
-    private String numOfReqApprovalsParam  ;//= requestMap.get(SELECT_NUMOFREQUIREDAPPROVALS);
-    private boolean finishUser = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_FINISHUSER));
-    private boolean isDoEnforceUniquePublicKeys =true;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUEPUBLICKEYS));
-    private boolean isDoEnforceUniqueDistinguishedName =false;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUEDN));
-    private boolean isDoEnforceUniqueSubjectDNSerialnumber =true;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUESUBJECTDNSERIALNUMBER));
-    private boolean useCertReqHistory =false;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECERTREQHISTORY));
-    //useUserStorage 若为false，新增entity时不保存在数据库，只保存在内存中
-    private boolean useUserStorage = true;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEUSERSTORAGE));
-    private boolean useCertificateStorage = true;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECERTIFICATESTORAGE));
-    private String subjectAltName ;//= requestMap.get(TEXTFIELD_SUBJECTALTNAME);
-    private String policyId  ;//= requestMap.get(TEXTFIELD_POLICYID);
-    private boolean useAuthorityKeyIdentifier = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_AUTHORITYKEYIDENTIFIER));
-    private boolean authorityKeyIdentifierCritical = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_AUTHORITYKEYIDENTIFIERCRITICAL));
-    // CRL periods and publishers is specific for X509 CAs
-    private long crlPeriod  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLPERIOD), "1"+CombineTime.TYPE_DAYS).getLong();
-    private long crlIssueInterval  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLISSUEINTERVAL), "0"+CombineTime.TYPE_MINUTES).getLong();
-    private long crlOverlapTime  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLOVERLAPTIME), "10"+CombineTime.TYPE_MINUTES).getLong();
-    private long deltaCrlPeriod  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_DELTACRLPERIOD), "0"+CombineTime.TYPE_MINUTES).getLong();              
-    private String availablePublisherValues  ;//= requestMap.get(SELECT_AVAILABLECRLPUBLISHERS);//request.getParameterValues(SELECT_AVAILABLECRLPUBLISHERS);
-    private boolean useCrlNumber = true;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECRLNUMBER));
-    private boolean crlNumberCritical = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_CRLNUMBERCRITICAL));
-    private String defaultCrlDistpoint  ;//= requestMap.get(TEXTFIELD_DEFAULTCRLDISTPOINT);
-    private String defaultCrlIssuer  ;//= requestMap.get(TEXTFIELD_DEFAULTCRLISSUER);
-    private String defaultOcspLocator  ;// = requestMap.get(TEXTFIELD_DEFAULTOCSPLOCATOR);
-    private String authorityInformationAccess  ;//= requestMap.get(TEXTFIELD_AUTHORITYINFORMATIONACCESS);
-    private String nameConstraintsPermitted  ;//= requestMap.get(TEXTFIELD_NAMECONSTRAINTSPERMITTED);
-    private String nameConstraintsExcluded ;// = requestMap.get(TEXTFIELD_NAMECONSTRAINTSEXCLUDED);
-    private String caDefinedFreshestCrl  ;//= requestMap.get(TEXTFIELD_CADEFINEDFRESHESTCRL);
-    private boolean useUtf8PolicyText = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEUTF8POLICYTEXT));
-    private boolean usePrintableStringSubjectDn = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEPRINTABLESTRINGSUBJECTDN));
-    private boolean useLdapDnOrder =false;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USELDAPDNORDER));
-    private boolean useCrlDistpointonCrl  = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECRLDISTRIBUTIONPOINTONCRL));
-    private boolean crlDistpointonCrlCritical = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_CRLDISTRIBUTIONPOINTONCRLCRITICAL));
-    private boolean includeInHealthCheck = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_INCLUDEINHEALTHCHECK));
-    private boolean serviceOcspActive = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_ACTIVATEOCSPSERVICE));
-    private boolean serviceCmsActive = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_ACTIVATECMSSERVICE));
-    private String sharedCmpRaSecret  ;//= requestMap.get(TEXTFIELD_SHAREDCMPRASECRET);
-    private int cryptoTokenId  ;//= requestMap.get(HIDDEN_CACRYPTOTOKEN); //requestMap.get(SELECT_CRYPTOTOKEN);
-    private String keyAliasCertSignKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_CERTSIGNKEY);
-    private String keyAliasCrlSignKey = keyAliasCertSignKey;//requestMap.get(SELECT_CRYPTOTOKEN_CRLSIGNKEY);
-    private String keyAliasDefaultKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_DEFAULTKEY);
-    private String keyAliasHardTokenEncryptKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_HARDTOKENENCRYPTKEY);
-    private String keyAliasKeyEncryptKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_KEYENCRYPTKEY);
-    private String keyAliasKeyTestKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_KEYTESTKEY);
+	private String description ;// = requestMap.get(TEXTFIELD_DESCRIPTION);
+	private String validityString  ;//= requestMap.get(TEXTFIELD_VALIDITY);
+	private String approvalSettingValues  ;//= requestMap.get(SELECT_APPROVALSETTINGS);//request.getParameterValues(SELECT_APPROVALSETTINGS);
+	private String numOfReqApprovalsParam  ;//= requestMap.get(SELECT_NUMOFREQUIREDAPPROVALS);
+	private boolean finishUser = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_FINISHUSER));
+	private boolean isDoEnforceUniquePublicKeys;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUEPUBLICKEYS));
+	private boolean isDoEnforceUniqueDistinguishedName;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUEDN));
+	private boolean isDoEnforceUniqueSubjectDNSerialnumber;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_DOENFORCEUNIQUESUBJECTDNSERIALNUMBER));
+	private boolean useCertReqHistory =false;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECERTREQHISTORY));
+	//useUserStorage 若为false，新增entity时不保存在数据库，只保存在内存中
+	private boolean useUserStorage;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEUSERSTORAGE));
+	private boolean useCertificateStorage;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECERTIFICATESTORAGE));
+	private String subjectAltName ;//= requestMap.get(TEXTFIELD_SUBJECTALTNAME);
+	private String policyId  ;//= requestMap.get(TEXTFIELD_POLICYID);
+	private boolean useAuthorityKeyIdentifier;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_AUTHORITYKEYIDENTIFIER));
+	private boolean authorityKeyIdentifierCritical;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_AUTHORITYKEYIDENTIFIERCRITICAL));
+	// CRL periods and publishers is specific for X509 CAs
+	private long crlPeriod  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLPERIOD), "1"+CombineTime.TYPE_DAYS).getLong();
+	private long crlIssueInterval  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLISSUEINTERVAL), "0"+CombineTime.TYPE_MINUTES).getLong();
+	private long crlOverlapTime  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_CRLOVERLAPTIME), "10"+CombineTime.TYPE_MINUTES).getLong();
+	private long deltaCrlPeriod  ;//= CombineTime.getInstance(requestMap.get(TEXTFIELD_DELTACRLPERIOD), "0"+CombineTime.TYPE_MINUTES).getLong();
+	private String availablePublisherValues  ;//= requestMap.get(SELECT_AVAILABLECRLPUBLISHERS);//request.getParameterValues(SELECT_AVAILABLECRLPUBLISHERS);
+	private boolean useCrlNumber;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECRLNUMBER));
+	private boolean crlNumberCritical;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_CRLNUMBERCRITICAL));
+	private String defaultCrlDistpoint  ;//= requestMap.get(TEXTFIELD_DEFAULTCRLDISTPOINT);
+	private String defaultCrlIssuer  ;//= requestMap.get(TEXTFIELD_DEFAULTCRLISSUER);
+	private String defaultOcspLocator  ;// = requestMap.get(TEXTFIELD_DEFAULTOCSPLOCATOR);
+	private String authorityInformationAccess  ;//= requestMap.get(TEXTFIELD_AUTHORITYINFORMATIONACCESS);
+	private String nameConstraintsPermitted  ;//= requestMap.get(TEXTFIELD_NAMECONSTRAINTSPERMITTED);
+	private String nameConstraintsExcluded ;// = requestMap.get(TEXTFIELD_NAMECONSTRAINTSEXCLUDED);
+	private String caDefinedFreshestCrl  ;//= requestMap.get(TEXTFIELD_CADEFINEDFRESHESTCRL);
+	private boolean useUtf8PolicyText;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEUTF8POLICYTEXT));
+	private boolean usePrintableStringSubjectDn;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USEPRINTABLESTRINGSUBJECTDN));
+	private boolean useLdapDnOrder;// CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USELDAPDNORDER));
+	private boolean useCrlDistpointonCrl  = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_USECRLDISTRIBUTIONPOINTONCRL));
+	private boolean crlDistpointonCrlCritical = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_CRLDISTRIBUTIONPOINTONCRLCRITICAL));
+	private boolean includeInHealthCheck = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_INCLUDEINHEALTHCHECK));
+	private boolean serviceOcspActive = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_ACTIVATEOCSPSERVICE));
+	private boolean serviceCmsActive = false;//CHECKBOX_VALUE.equals(requestMap.get(CHECKBOX_ACTIVATECMSSERVICE));
+	private String sharedCmpRaSecret  ;//= requestMap.get(TEXTFIELD_SHAREDCMPRASECRET);
+	private int cryptoTokenId  ;//= requestMap.get(HIDDEN_CACRYPTOTOKEN); //requestMap.get(SELECT_CRYPTOTOKEN);
+	private String keyAliasCertSignKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_CERTSIGNKEY);
+	private String keyAliasCrlSignKey = keyAliasCertSignKey;//requestMap.get(SELECT_CRYPTOTOKEN_CRLSIGNKEY);
+	private String keyAliasDefaultKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_DEFAULTKEY);
+	private String keyAliasHardTokenEncryptKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_HARDTOKENENCRYPTKEY);
+	private String keyAliasKeyEncryptKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_KEYENCRYPTKEY);
+	private String keyAliasKeyTestKey  ;//= requestMap.get(SELECT_CRYPTOTOKEN_KEYTESTKEY);
 	public String getCaName() {
 		return caName;
 	}
@@ -181,19 +179,19 @@ public class CreateNewCaForm {
 	public boolean isDoEnforceUniquePublicKeys() {
 		return isDoEnforceUniquePublicKeys;
 	}
-	public void setDoEnforceUniquePublicKeys(boolean isDoEnforceUniquePublicKeys) {
+	public void setIsDoEnforceUniquePublicKeys(boolean isDoEnforceUniquePublicKeys) {
 		this.isDoEnforceUniquePublicKeys = isDoEnforceUniquePublicKeys;
 	}
 	public boolean isDoEnforceUniqueDistinguishedName() {
 		return isDoEnforceUniqueDistinguishedName;
 	}
-	public void setDoEnforceUniqueDistinguishedName(boolean isDoEnforceUniqueDistinguishedName) {
+	public void setIsDoEnforceUniqueDistinguishedName(boolean isDoEnforceUniqueDistinguishedName) {
 		this.isDoEnforceUniqueDistinguishedName = isDoEnforceUniqueDistinguishedName;
 	}
 	public boolean isDoEnforceUniqueSubjectDNSerialnumber() {
 		return isDoEnforceUniqueSubjectDNSerialnumber;
 	}
-	public void setDoEnforceUniqueSubjectDNSerialnumber(boolean isDoEnforceUniqueSubjectDNSerialnumber) {
+	public void setIsDoEnforceUniqueSubjectDNSerialnumber(boolean isDoEnforceUniqueSubjectDNSerialnumber) {
 		this.isDoEnforceUniqueSubjectDNSerialnumber = isDoEnforceUniqueSubjectDNSerialnumber;
 	}
 	public boolean isUseCertReqHistory() {
@@ -226,7 +224,7 @@ public class CreateNewCaForm {
 	public void setPolicyId(String policyId) {
 		this.policyId = policyId;
 	}
-	 
+
 	public long getCrlIssueInterval() {
 		return crlIssueInterval;
 	}
@@ -239,14 +237,14 @@ public class CreateNewCaForm {
 	public void setCrlOverlapTime(long crlOverlapTime) {
 		this.crlOverlapTime = crlOverlapTime;
 	}
-	 
+
 	public String getAvailablePublisherValues() {
 		return availablePublisherValues;
 	}
 	public void setAvailablePublisherValues(String availablePublisherValues) {
 		this.availablePublisherValues = availablePublisherValues;
 	}
-	 
+
 	public String getAuthorityInformationAccess() {
 		return authorityInformationAccess;
 	}
@@ -271,14 +269,14 @@ public class CreateNewCaForm {
 	public void setCaDefinedFreshestCrl(String caDefinedFreshestCrl) {
 		this.caDefinedFreshestCrl = caDefinedFreshestCrl;
 	}
-	 
+
 	public boolean isUseCrlDistpointonCrl() {
 		return useCrlDistpointonCrl;
 	}
 	public void setUseCrlDistpointonCrl(boolean useCrlDistpointonCrl) {
 		this.useCrlDistpointonCrl = useCrlDistpointonCrl;
 	}
-	 
+
 	public boolean isIncludeInHealthCheck() {
 		return includeInHealthCheck;
 	}
@@ -423,8 +421,8 @@ public class CreateNewCaForm {
 	public void setCrlDistpointonCrlCritical(boolean crlDistpointonCrlCritical) {
 		this.crlDistpointonCrlCritical = crlDistpointonCrlCritical;
 	}
-    
-    
+
+
 //	public String getCaName() {
 //		return caName;
 //	}
@@ -497,6 +495,6 @@ public class CreateNewCaForm {
 //	public void setPassword(String password) {
 //		this.password = password;
 //	}
-	
-	
+
+
 }
