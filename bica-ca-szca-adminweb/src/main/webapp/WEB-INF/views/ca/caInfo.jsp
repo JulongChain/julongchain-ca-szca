@@ -58,11 +58,11 @@
 					<!-- END BEGIN STYLE CUSTOMIZER -->
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-						CA <small></small>
+						查看CA <small></small>
 					</h3>
 					<ul class="breadcrumb">
 						<li><i class="icon-home"></i> <a href="index.html">CA功能</a> <i class="icon-angle-right"></i></li>
-						<li><a href="#">CA列表</a><i class="icon-angle-right"></i></li>
+						<li><a href="#">授权CA列表</a><i class="icon-angle-right"></i></li>
 						<li><a href="#">查看CA</a></li>
 						<li class="pull-right no-text-shadow">
 							<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top"
