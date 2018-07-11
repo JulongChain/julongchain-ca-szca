@@ -288,7 +288,7 @@ public class BciaRequestInstance {
 				//resultByte = resp.getEncoded();
 				
 				//证书
-				resultByte = Base64.encode(resp.getCertificate().getEncoded(), false);
+				resultByte = Base64.encode(resp.getCertificate().getEncoded(), true);
 				// CertificateFactory cf = CertificateFactory.getInstance("X.509");
 				//将文件以文件流的形式读入证书类Certificate中
 				 // Certificate cert = cf.generateCertificate(bin);

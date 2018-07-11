@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.controller;
@@ -67,8 +65,8 @@ public class EnrollCertController {
 					this.sendPEMTokens(form.getUsername(), result.getResultData(), res);
 				if(result.getTokenType()==SecConst.TOKEN_SOFT_BROWSERGEN)
 					this.sendCert(form.getUsername(), result.getResultData(), res);
-				if(result.getTokenType()==SecConst.TOKEN_SOFT_BROWSERGEN)
-					this.sendCert(form.getUsername(), result.getResultData(), res);
+				//if(result.getTokenType()==SecConst.TOKEN_SOFT_BROWSERGEN)
+				//	this.sendCert(form.getUsername(), result.getResultData(), res);
 			}else {
 				res.setCharacterEncoding("utf-8");
 				res.getWriter().println("系统异常："+result.getMessage());
@@ -113,7 +111,9 @@ public class EnrollCertController {
 		res.setCharacterEncoding("utf-8");
 		res.setContentType("application/octet-stream");
 		res.setHeader("Content-disposition", " attachment; filename=\"" + StringTools.stripFilename(username + ".cer") + "\"");
+		res.getOutputStream().write("-----BEGIN CERTIFICATE-----\n".getBytes());
 		res.getOutputStream().write(tokenData);
+		res.getOutputStream().write("\n-----END CERTIFICATE-----".getBytes());
 		res.flushBuffer();
 	}
 }
