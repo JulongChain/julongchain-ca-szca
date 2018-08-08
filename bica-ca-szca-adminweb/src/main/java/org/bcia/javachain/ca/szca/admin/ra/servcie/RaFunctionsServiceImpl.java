@@ -1242,214 +1242,224 @@ public class RaFunctionsServiceImpl implements RaFunctionsService{
         return result;
 	}
 
-	@Override
-	public Result viewcertificate(HttpServletRequest request, String username, ModelAndView view) {
-		Result result=new Result();
-		 AuthenticationToken administrator= getAuthenticationToken(request);
-		List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(username, false, null);
-		if (!list.isEmpty()) {
-			CertificateView certificateView = new CertificateView(list.get(0));
-			ViewcertificateVo viewcertificateVo = new ViewcertificateVo();
-			viewcertificateVo.setUsername(WebLanguages.getInstance().getText("USERNAME"));
-			viewcertificateVo.setUsernameVal(certificateView.getUsername());
-			viewcertificateVo.setCertificatenr(WebLanguages.getInstance().getText("CERTIFICATENR"));
-			viewcertificateVo.setCertificatenrVal("1" + WebLanguages.getInstance().getText("OF") + list.size());
-			viewcertificateVo.setCert_typeversion(WebLanguages.getInstance().getText("CERT_TYPEVERSION"));
-			viewcertificateVo.setCert_typeversionVal(certificateView.getType()+ WebLanguages.getInstance().getText("VER") + certificateView.getVersion());
-			viewcertificateVo.setCert_serialnumber(WebLanguages.getInstance().getText("CERT_SERIALNUMBER"));
-			viewcertificateVo.setCert_serialnumberVal(getFormatedCertSN(certificateView));
-			viewcertificateVo.setCert_issuerdn(WebLanguages.getInstance().getText("CERT_ISSUERDN"));
-			viewcertificateVo.setCert_issuerdnVal(certificateView.getIssuerDN());
-			viewcertificateVo.setCert_validto(WebLanguages.getInstance().getText("CERT_VALIDTO"));
-			viewcertificateVo.setCert_validtoVal(certificateView.getValidToString());
-			viewcertificateVo.setCert_validfrom(WebLanguages.getInstance().getText("CERT_VALIDFROM"));
-			viewcertificateVo.setCert_validfromVal(certificateView.getValidFromString());
-			viewcertificateVo.setCert_validto(WebLanguages.getInstance().getText("CERT_VALIDTO"));
-			viewcertificateVo.setCert_validtoVal(certificateView.getValidToString());
-			viewcertificateVo.setCert_subjectdn(WebLanguages.getInstance().getText("CERT_SUBJECTDN"));
-			viewcertificateVo.setCert_subjectdnVal(certificateView.getSubjectDN());
-			viewcertificateVo.setSignaturealgorithm(WebLanguages.getInstance().getText("SIGNATUREALGORITHM"));
-			viewcertificateVo.setSignaturealgorithmVal(certificateView.getSignatureAlgoritm());
-			boolean type=!certificateView.getType().equalsIgnoreCase("CVC");
-			view.addObject("type", type);
-			if (type) {
-				 viewcertificateVo.setExt_abbr_subjectaltname(WebLanguages.getInstance().getText("EXT_ABBR_SUBJECTALTNAME"));
-				 if(certificateView.getSubjectAltName() == null) {
-						viewcertificateVo.setExt_abbr_subjectaltnameVal((WebLanguages.getInstance().getText("ALT_NONE")));
- 				 }else {
-						viewcertificateVo.setExt_abbr_subjectaltnameVal(certificateView.getSubjectAltName());
- 				 }
 
- 				 viewcertificateVo.setExt_abbr_subjectdirattrs(WebLanguages.getInstance().getText("EXT_ABBR_SUBJECTDIRATTRS"));
-				 if(certificateView.getSubjectDirAttr()== null) {
-						viewcertificateVo.setExt_abbr_subjectaltnameVal((WebLanguages.getInstance().getText("SDA_NONE")));
- 				 }else {
-						viewcertificateVo.setExt_abbr_subjectaltnameVal(certificateView.getSubjectDirAttr());
- 				 }
-
-
-				 viewcertificateVo.setExt_abbr_keyusage(WebLanguages.getInstance().getText("EXT_ABBR_KEYUSAGE"));
-				    boolean first= true;
-	                boolean none = true;
-	                StringBuilder keyUsageSb=new StringBuilder();
-			        if(certificateView.getKeyUsage(CertificateConstants.DIGITALSIGNATURE)){
-			        	 keyUsageSb.append(WebLanguages.getInstance().getText("KU_DIGITALSIGNATURE"));
-			        	  first=false;
-		                  none =false;
-		             }
-		            if(certificateView.getKeyUsage(CertificateConstants.NONREPUDIATION)){
- 		                  if(!first) {
-		                	  keyUsageSb.append(", ");
-		                  }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_NONREPUDIATION"));
- 		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.KEYENCIPHERMENT)){
-		                	  if(!first) {
-			                	  keyUsageSb.append(", ");
-			                  }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYENCIPHERMENT"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.DATAENCIPHERMENT)){
-		                	  if(!first) {
-			                	  keyUsageSb.append(", ");
-			                  }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_DATAENCIPHERMENT"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.KEYAGREEMENT)){
-		                  if(!first) {
-			                	  keyUsageSb.append(", ");
-			                }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYAGREEMENT"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.KEYCERTSIGN)){
-		                	if(!first) {
-			                	  keyUsageSb.append(", ");
-			                }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYCERTSIGN"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.CRLSIGN)){
-		                  if(!first) {
-			                	  keyUsageSb.append(", ");
-			                }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_CRLSIGN"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.ENCIPHERONLY)){
-		                	 if(!first) {
-			                	  keyUsageSb.append(", ");
-			                }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_ENCIPHERONLY"));
-  		                }
-		                if(certificateView.getKeyUsage(CertificateConstants.DECIPHERONLY)){
-		                 	 if(!first) {
-			                	  keyUsageSb.append(", ");
-			                }
-		                  first=false;
-		                  none =false;
-		                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_DECIPHERONLY"));
-  		               }
-		               if(none){
-			                  keyUsageSb.append(WebLanguages.getInstance().getText("KU_NONE"));
-  		              }
-		           viewcertificateVo.setExt_abbr_keyusageVal(keyUsageSb.toString());
- 			}
-
-			viewcertificateVo.setCert_publickey(WebLanguages.getInstance().getText("CERT_PUBLICKEY"));
-			StringBuilder sb=new StringBuilder();
-			sb.append(certificateView.getPublicKeyAlgorithm()).append(certificateView.getKeySpec(WebLanguages.getInstance().getText("BITS")));
-			if(certificateView.getPublicKeyModulus() != null) {
-				sb.append(certificateView.getPublicKeyModulus());
-			}
-			viewcertificateVo.setCert_publickeyVal(sb.toString());
-
-			viewcertificateVo.setExt_abbr_basicconstraints(WebLanguages.getInstance().getText("EXT_ABBR_BASICCONSTRAINTS"));
-			viewcertificateVo.setExt_abbr_basicconstraintsVal(certificateView.getBasicConstraints(WebLanguages.getInstance().getText("EXT_UNUSED"), WebLanguages.getInstance().getText("EXT_PKIX_BC_CANOLIMIT"), WebLanguages.getInstance().getText("EXT_PKIX_BC_ENDENTITY"), WebLanguages.getInstance().getText("EXT_PKIX_BC_CAPATHLENGTH")));
-			viewcertificateVo.setExt_abbr_extendedkeyusage(WebLanguages.getInstance().getText("EXT_ABBR_EXTENDEDKEYUSAGE"));
-
-		    String[] extendedkeyusage = certificateView.getExtendedKeyUsageAsTexts((AvailableExtendedKeyUsagesConfiguration) globalConfigurationSessionLocal.getCachedConfiguration(AvailableExtendedKeyUsagesConfiguration.CONFIGURATION_ID));
-		    sb.delete(0, sb.length());
-		    for(int i=0; i<extendedkeyusage.length; i++){
-               if(i>0) {
-             	   sb.append(", ").append(WebLanguages.getInstance().getText(extendedkeyusage[i]));
+    public Result viewcertificate(HttpServletRequest request, String username, int index, ModelAndView view) {
+        Result result=new Result();
+        AuthenticationToken administrator= getAuthenticationToken(request);
+        List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(username, false, null);
+        if (!list.isEmpty()) {
+            CertificateView certificateView = new CertificateView(list.get(index));
+            ViewcertificateVo viewcertificateVo = new ViewcertificateVo();
+            viewcertificateVo.setUsername(WebLanguages.getInstance().getText("USERNAME"));
+            viewcertificateVo.setUsernameVal(certificateView.getUsername());
+            viewcertificateVo.setCertificatenr(WebLanguages.getInstance().getText("CERTIFICATENR"));
+            viewcertificateVo.setCertificatenrVal((index + 1) + WebLanguages.getInstance().getText("OF") + list.size());
+            viewcertificateVo.setCert_typeversion(WebLanguages.getInstance().getText("CERT_TYPEVERSION"));
+            viewcertificateVo.setCert_typeversionVal(certificateView.getType()+ WebLanguages.getInstance().getText("VER") + certificateView.getVersion());
+            viewcertificateVo.setCert_serialnumber(WebLanguages.getInstance().getText("CERT_SERIALNUMBER"));
+            viewcertificateVo.setCert_serialnumberVal(getFormatedCertSN(certificateView));
+            viewcertificateVo.setCert_issuerdn(WebLanguages.getInstance().getText("CERT_ISSUERDN"));
+            viewcertificateVo.setCert_issuerdnVal(certificateView.getIssuerDN());
+            viewcertificateVo.setCert_validto(WebLanguages.getInstance().getText("CERT_VALIDTO"));
+            viewcertificateVo.setCert_validtoVal(certificateView.getValidToString());
+            viewcertificateVo.setCert_validfrom(WebLanguages.getInstance().getText("CERT_VALIDFROM"));
+            viewcertificateVo.setCert_validfromVal(certificateView.getValidFromString());
+            viewcertificateVo.setCert_validto(WebLanguages.getInstance().getText("CERT_VALIDTO"));
+            viewcertificateVo.setCert_validtoVal(certificateView.getValidToString());
+            viewcertificateVo.setCert_subjectdn(WebLanguages.getInstance().getText("CERT_SUBJECTDN"));
+            viewcertificateVo.setCert_subjectdnVal(certificateView.getSubjectDN());
+            viewcertificateVo.setSignaturealgorithm(WebLanguages.getInstance().getText("SIGNATUREALGORITHM"));
+            viewcertificateVo.setSignaturealgorithmVal(certificateView.getSignatureAlgoritm());
+            boolean type=!certificateView.getType().equalsIgnoreCase("CVC");
+            view.addObject("type", type);
+            if (type) {
+                viewcertificateVo.setExt_abbr_subjectaltname(WebLanguages.getInstance().getText("EXT_ABBR_SUBJECTALTNAME"));
+                if(certificateView.getSubjectAltName() == null) {
+                    viewcertificateVo.setExt_abbr_subjectaltnameVal((WebLanguages.getInstance().getText("ALT_NONE")));
+                }else {
+                    viewcertificateVo.setExt_abbr_subjectaltnameVal(certificateView.getSubjectAltName());
                 }
-              }
-             if(extendedkeyusage == null || extendedkeyusage.length == 0) {
-                  sb.append(WebLanguages.getInstance().getText("EKU_NONE"));
-              }
- 			  viewcertificateVo.setExt_abbr_extendedkeyusageVal(sb.toString());
- 			  viewcertificateVo.setExt_abbr_nameconstraints(WebLanguages.getInstance().getText("EXT_ABBR_NAMECONSTRAINTS"));
- 			  viewcertificateVo.setExt_abbr_nameconstraintsVal(certificateView.hasNameConstraints()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
 
- 			 viewcertificateVo.setExt_abbr_qcstatements(WebLanguages.getInstance().getText("EXT_ABBR_QCSTATEMENTS"));
-			 viewcertificateVo.setExt_abbr_qcstatementsVal(certificateView.hasQcStatement()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
-
-			 viewcertificateVo.setExt_certificate_transparency_scts(WebLanguages.getInstance().getText("EXT_CERTIFICATE_TRANSPARENCY_SCTS"));
-			 viewcertificateVo.setExt_certificate_transparency_sctsVal(certificateView.hasCertificateTransparencySCTs()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
-
-			 viewcertificateVo.setFingerprint_sha256(WebLanguages.getInstance().getText("FINGERPRINT_SHA256"));
-			 viewcertificateVo.setFingerprint_sha256Val( certificateView.getSHA256Fingerprint());
-
-			 viewcertificateVo.setFingerprint_sha1(WebLanguages.getInstance().getText("FINGERPRINT_SHA1"));
-			 viewcertificateVo.setFingerprint_sha1Val( certificateView.getSHA1Fingerprint());
-
-			 viewcertificateVo.setRevoked(WebLanguages.getInstance().getText("REVOKED"));
-			 sb.delete(0, sb.length());
-			 boolean isRevoked= certificateView.isRevoked();
-			 view.addObject("isRevoked", isRevoked);
-			 if(isRevoked){
-				 sb.append(WebLanguages.getInstance().getText("YES"));
-				 viewcertificateVo.setRevocationdate((WebLanguages.getInstance().getText("CRL_ENTRY_REVOCATIONDATE")));
- 				 viewcertificateVo.setRevocationdateVal(formatAsISO8601(certificateView.getRevocationDate()));
- 				 viewcertificateVo.setRevocationreasons(WebLanguages.getInstance().getText("REVOCATIONREASONS"));
- 				 viewcertificateVo.setRevocationreasonsVal(certificateView.getRevocationReason()==null?"":WebLanguages.getInstance().getText(certificateView.getRevocationReason()));
-                } else {
- 				 sb.append(WebLanguages.getInstance().getText("NO"));
+                viewcertificateVo.setExt_abbr_subjectdirattrs(WebLanguages.getInstance().getText("EXT_ABBR_SUBJECTDIRATTRS"));
+                if(certificateView.getSubjectDirAttr()== null) {
+                    viewcertificateVo.setExt_abbr_subjectdirattrsVal((WebLanguages.getInstance().getText("SDA_NONE")));
+                }else {
+                    viewcertificateVo.setExt_abbr_subjectdirattrsVal(certificateView.getSubjectDirAttr());
                 }
-			  viewcertificateVo.setRevokedVal(sb.toString());
-
-		      try {
-				if(authorizedToRevokeCert(certificateView.getUsername(),administrator) && isAuthorizedNoLog(administrator,AUTHORIZED_RA_REVOKE_RIGHTS)){
-						if ( !certificateView.isRevoked() || certificateView.isRevokedAndOnHold() ){
-						    Map<String,Integer> revokeMap=new HashMap<String,Integer>();
-							 for(int i=0; i < SecConst.reasontexts.length; i++){
-					               if(i!= 7){
-					            	   revokeMap.put(WebLanguages.getInstance().getText(SecConst.reasontexts[i]), i);
-					               }
-					            }
-							 viewcertificateVo.setRevoke(WebLanguages.getInstance().getText("REVOKE"));
-							 view.addObject("revokeMap", revokeMap);//
-							}
-					}
 
 
+                viewcertificateVo.setExt_abbr_keyusage(WebLanguages.getInstance().getText("EXT_ABBR_KEYUSAGE"));
+                boolean first= true;
+                boolean none = true;
+                StringBuilder keyUsageSb=new StringBuilder();
+                if(certificateView.getKeyUsage(CertificateConstants.DIGITALSIGNATURE)){
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_DIGITALSIGNATURE"));
+                    first=false;
+                    none =false;
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.NONREPUDIATION)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_NONREPUDIATION"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.KEYENCIPHERMENT)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYENCIPHERMENT"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.DATAENCIPHERMENT)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_DATAENCIPHERMENT"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.KEYAGREEMENT)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYAGREEMENT"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.KEYCERTSIGN)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_KEYCERTSIGN"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.CRLSIGN)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_CRLSIGN"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.ENCIPHERONLY)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_ENCIPHERONLY"));
+                }
+                if(certificateView.getKeyUsage(CertificateConstants.DECIPHERONLY)){
+                    if(!first) {
+                        keyUsageSb.append(", ");
+                    }
+                    first=false;
+                    none =false;
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_DECIPHERONLY"));
+                }
+                if(none){
+                    keyUsageSb.append(WebLanguages.getInstance().getText("KU_NONE"));
+                }
+                viewcertificateVo.setExt_abbr_keyusageVal(keyUsageSb.toString());
+            }
 
-				 view.addObject("viewcertificateVo",viewcertificateVo);//
- 				 view.addObject("isRevokedAndOnHold", certificateView.isRevokedAndOnHold());//
-				 view.addObject("UNREVOKE", WebLanguages.getInstance().getText("UNREVOKE"));//
+            viewcertificateVo.setCert_publickey(WebLanguages.getInstance().getText("CERT_PUBLICKEY"));
+            StringBuilder sb=new StringBuilder();
 
-			} catch (AuthorizationDeniedException e) {
- 				e.printStackTrace();
-			}
-		      result.setSuccess(true);
-    	      return result;
-	     }else {
-	    	 result.setMsg(WebLanguages.getInstance().getText("CERTIFICATEDOESNTEXIST"));
-	    	 return result;
-	     }
- 	}
+
+            sb.append(certificateView.getPublicKeyAlgorithm());
+            if("EC".equals(certificateView.getCertificate().getPublicKey().getAlgorithm()))
+                sb.append("(sm2p256v1) ");
+            else
+                sb.append(certificateView.getKeySpec(WebLanguages.getInstance().getText("BITS")));
+            if(certificateView.getPublicKeyModulus() != null) {
+                sb.append(certificateView.getPublicKeyModulus());
+            }
+            viewcertificateVo.setCert_publickeyVal(sb.toString());
+
+            viewcertificateVo.setExt_abbr_basicconstraints(WebLanguages.getInstance().getText("EXT_ABBR_BASICCONSTRAINTS"));
+            viewcertificateVo.setExt_abbr_basicconstraintsVal(certificateView.getBasicConstraints(WebLanguages.getInstance().getText("EXT_UNUSED"), WebLanguages.getInstance().getText("EXT_PKIX_BC_CANOLIMIT"), WebLanguages.getInstance().getText("EXT_PKIX_BC_ENDENTITY"), WebLanguages.getInstance().getText("EXT_PKIX_BC_CAPATHLENGTH")));
+            viewcertificateVo.setExt_abbr_extendedkeyusage(WebLanguages.getInstance().getText("EXT_ABBR_EXTENDEDKEYUSAGE"));
+
+            String[] extendedkeyusage = certificateView.getExtendedKeyUsageAsTexts((AvailableExtendedKeyUsagesConfiguration) globalConfigurationSessionLocal.getCachedConfiguration(AvailableExtendedKeyUsagesConfiguration.CONFIGURATION_ID));
+            sb.delete(0, sb.length());
+            for(int i=0; i<extendedkeyusage.length; i++){
+                if(sb.length()>0) {
+                    sb.append(", ").append(WebLanguages.getInstance().getText(extendedkeyusage[i]));
+                }else {
+                    sb.append(WebLanguages.getInstance().getText(extendedkeyusage[i]));
+                }
+            }
+            if(extendedkeyusage == null || extendedkeyusage.length == 0) {
+                sb.append(WebLanguages.getInstance().getText("EKU_NONE"));
+            }
+            viewcertificateVo.setExt_abbr_extendedkeyusageVal(sb.toString());
+            viewcertificateVo.setExt_abbr_nameconstraints(WebLanguages.getInstance().getText("EXT_ABBR_NAMECONSTRAINTS"));
+            viewcertificateVo.setExt_abbr_nameconstraintsVal(certificateView.hasNameConstraints()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
+
+            viewcertificateVo.setExt_abbr_qcstatements(WebLanguages.getInstance().getText("EXT_ABBR_QCSTATEMENTS"));
+            viewcertificateVo.setExt_abbr_qcstatementsVal(certificateView.hasQcStatement()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
+
+            viewcertificateVo.setExt_certificate_transparency_scts(WebLanguages.getInstance().getText("EXT_CERTIFICATE_TRANSPARENCY_SCTS"));
+            viewcertificateVo.setExt_certificate_transparency_sctsVal(certificateView.hasCertificateTransparencySCTs()?WebLanguages.getInstance().getText("YES"):WebLanguages.getInstance().getText("NO"));
+
+            viewcertificateVo.setFingerprint_sha256(WebLanguages.getInstance().getText("FINGERPRINT_SHA256"));
+            viewcertificateVo.setFingerprint_sha256Val( certificateView.getSHA256Fingerprint());
+
+            viewcertificateVo.setFingerprint_sha1(WebLanguages.getInstance().getText("FINGERPRINT_SHA1"));
+            viewcertificateVo.setFingerprint_sha1Val( certificateView.getSHA1Fingerprint());
+
+            viewcertificateVo.setRevoked(WebLanguages.getInstance().getText("REVOKED"));
+            sb.delete(0, sb.length());
+            boolean isRevoked= certificateView.isRevoked();
+            view.addObject("isRevoked", isRevoked);
+            if(isRevoked){
+                sb.append(WebLanguages.getInstance().getText("YES"));
+                viewcertificateVo.setRevocationdate((WebLanguages.getInstance().getText("CRL_ENTRY_REVOCATIONDATE")));
+                viewcertificateVo.setRevocationdateVal(formatAsISO8601(certificateView.getRevocationDate()));
+                viewcertificateVo.setRevocationreasons(WebLanguages.getInstance().getText("REVOCATIONREASONS"));
+                viewcertificateVo.setRevocationreasonsVal(certificateView.getRevocationReason()==null?"":WebLanguages.getInstance().getText(certificateView.getRevocationReason()));
+            } else {
+                sb.append(WebLanguages.getInstance().getText("NO"));
+            }
+            viewcertificateVo.setRevokedVal(sb.toString());
+
+            try {
+                if(authorizedToRevokeCert(certificateView.getUsername(),administrator) && isAuthorizedNoLog(administrator,AUTHORIZED_RA_REVOKE_RIGHTS)){
+                    if ( !certificateView.isRevoked() || certificateView.isRevokedAndOnHold() ){
+                        Map<String,Integer> revokeMap=new HashMap<String,Integer>();
+                        for(int i=0; i < SecConst.reasontexts.length; i++){
+                            if(i!= 7){
+                                revokeMap.put(WebLanguages.getInstance().getText(SecConst.reasontexts[i]), i);
+                            }
+                        }
+                        viewcertificateVo.setRevoke(WebLanguages.getInstance().getText("REVOKE"));
+                        view.addObject("revokeMap", revokeMap);//
+                    }
+                }
+
+
+                view.addObject("viewcertificateVo",viewcertificateVo);//
+                view.addObject("isRevokedAndOnHold", certificateView.isRevokedAndOnHold());//
+                view.addObject("UNREVOKE", WebLanguages.getInstance().getText("UNREVOKE"));//
+                view.addObject("certindex", index);//
+                view.addObject("certsize", list.size());//
+
+            } catch (AuthorizationDeniedException e) {
+                e.printStackTrace();
+            }
+            result.setSuccess(true);
+            return result;
+        }else {
+            result.setMsg(WebLanguages.getInstance().getText("CERTIFICATEDOESNTEXIST"));
+            return result;
+        }
+    }
+
 
 
 
@@ -1486,43 +1496,97 @@ public class RaFunctionsServiceImpl implements RaFunctionsService{
 
     }
 
-	@Override
-	public Result revoke(HttpServletRequest request, String username,int reason) {
- 		AuthenticationToken administrator= getAuthenticationToken(request);
-		Result result=new Result();
-		List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(username, false, null);
-		if(list.size()<=0) {
-	    	 result.setMsg(WebLanguages.getInstance().getText("CERTIFICATEDOESNTEXIST"));
-	    	 return result;
-		}else {
-			CertificateView  certificatedata = new CertificateView(list.get(0));
- 			try {
-				if(authorizedToRevokeCert(certificatedata.getUsername(),administrator) && isAuthorizedNoLog(administrator,AUTHORIZED_RA_REVOKE_RIGHTS) && (!certificatedata.isRevoked()||certificatedata.isRevokedAndOnHold())) {
-					 endEntityManagementSessionBean.revokeCert(administrator, certificatedata.getSerialNumberBigInt(), certificatedata.getIssuerDNUnEscaped(), reason);
-					 result.setSuccess(true);
-					 result.setMsg("OK");
-					 return result;
-				 }
- 			} catch (ApprovalException e) {
-				log.error(e);
-  				result.setMsg("ApprovalException ");
-			} catch (AlreadyRevokedException e) {
-				log.error(e);
- 				result.setMsg("AlreadyRevokedException");
- 			} catch (AuthorizationDeniedException e) {
- 				log.error(e);
-  				result.setMsg("AuthorizationDeniedException");
- 			} catch (FinderException e) {
- 				result.setMsg("FinderException");
- 				log.error(e);
-  			} catch (WaitingForApprovalException e) {
- 				result.setMsg("WaitingForApprovalException");
- 				log.error(e);
-			}
-  		}
-		return result;
-	}
+    @Transactional
+    public Result revoke(HttpServletRequest request, String username,int reason, String sha1Finger) {
+        AuthenticationToken administrator= getAuthenticationToken(request);
+        Result result=new Result();
+        List<Integer> excludeStatus = new ArrayList<Integer>();
+        excludeStatus.add(CertificateConstants.CERT_REVOKED);
+        List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(username, false, excludeStatus);
+        if(list.size()<=0) {
+            result.setMsg(WebLanguages.getInstance().getText("CERTIFICATEDOESNTEXIST"));
+            return result;
+        }else if(list.size() == 1){
+            try {
+                log.info("The User has only one cert with status no_revoked!");
+                CertificateView  c = new CertificateView(list.get(0));
+                if(c.getSHA1Fingerprint().equals(sha1Finger)) {
+                    endEntityManagementSessionBean.revokeUser(administrator, username, reason);
+                    result.setSuccess(true);
+                    result.setMsg("OK");
+                    return result;
+                }else {
+                    log.error("The sha1Finger of the certificate to revoke was not found!");
+                    result.setMsg("The certificate had been revoked!");
+                }
+            } catch (ApprovalException | AlreadyRevokedException | AuthorizationDeniedException | FinderException
+                    | WaitingForApprovalException e) {
+                log.error(e);
+                result.setMsg(e.getMessage());
+            }
+        }else{
+            CertificateView  certificatedata = null;
+            for(int i=0;i<list.size();i++) {
+                CertificateView  c = new CertificateView(list.get(i));
+                if(c.getSHA1Fingerprint().equals(sha1Finger)) {
+                    certificatedata = c;
+                    break;
+                }
+            }
+            if(certificatedata != null) {
+                try {
+                    if(authorizedToRevokeCert(certificatedata.getUsername(),administrator) && isAuthorizedNoLog(administrator,AUTHORIZED_RA_REVOKE_RIGHTS) && (!certificatedata.isRevoked())) {
+                        endEntityManagementSessionBean.revokeCert(administrator, certificatedata.getSerialNumberBigInt(), certificatedata.getIssuerDNUnEscaped(), reason);
+                        result.setSuccess(true);
+                        result.setMsg("OK");
+                        return result;
+                    }
+                } catch (ApprovalException e) {
+                    log.error(e);
+                    result.setMsg("ApprovalException ");
+                } catch (AlreadyRevokedException e) {
+                    log.error(e);
+                    result.setMsg("AlreadyRevokedException");
+                } catch (AuthorizationDeniedException e) {
+                    log.error(e);
+                    result.setMsg("AuthorizationDeniedException");
+                } catch (FinderException e) {
+                    result.setMsg("FinderException");
+                    log.error(e);
+                } catch (WaitingForApprovalException e) {
+                    result.setMsg("WaitingForApprovalException");
+                    log.error(e);
+                }
+            }
+        }
+        return result;
+    }
 
+    @Transactional
+    public Result revokeUser(HttpServletRequest request, String username,int reason) {
+        AuthenticationToken administrator= getAuthenticationToken(request);
+        Result result=new Result();
+        List<Integer> excludeStatus = new ArrayList<Integer>();
+        excludeStatus.add(CertificateConstants.CERT_REVOKED);
+        List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(username, false, excludeStatus);
+        if(list.size()<=0) {
+            result.setMsg(WebLanguages.getInstance().getText("CERTIFICATEDOESNTEXIST"));
+            return result;
+        }else{
+            try {
+                log.info("The User has only one cert with status no_revoked!");
+                endEntityManagementSessionBean.revokeUser(administrator, username, reason);
+                result.setSuccess(true);
+                result.setMsg("OK");
+                return result;
+            } catch (ApprovalException | AlreadyRevokedException | AuthorizationDeniedException | FinderException
+                    | WaitingForApprovalException e) {
+                log.error(e);
+                result.setMsg(e.getMessage());
+            }
+        }
+        return result;
+    }
 
 
 }

@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.ra.controller;
@@ -91,23 +89,30 @@ public class RaFunctionsController {
 	
 	
 	@RequestMapping(value = "/viewcertificate", method = {RequestMethod.GET })
- 	public ModelAndView viewcertificate(HttpServletRequest request,String  username) {
+ 	public ModelAndView viewcertificate(HttpServletRequest request,String  username, int index) {
 		   ModelAndView view = new ModelAndView("/ra/viewcertificate");
- 		   Result  result =raFunctionsService.viewcertificate(request, username,view);
+ 		   Result  result =raFunctionsService.viewcertificate(request, username,index, view);
 		   if(!result.isSuccess()) {
   				view.addObject("msg", result.getMsg());
 			}
           return view;
 	}
-	
-	
-	
-	
+
+
+
+
 	@RequestMapping(value = "/revoke", method = {RequestMethod.POST })
 	@ResponseBody
- 	public String revoke(HttpServletRequest request,String  username,int reason) {
-  		  Result  result =raFunctionsService.revoke(request, username,reason);
-  		  return JSONObject.fromObject(result).toString();
+	public String revoke(HttpServletRequest request,String  username,int reason,String sh1Finger) {
+		Result  result =raFunctionsService.revoke(request, username,reason,sh1Finger);
+		return JSONObject.fromObject(result).toString();
+	}
+
+	@RequestMapping(value = "/revokeUser", method = {RequestMethod.POST })
+	@ResponseBody
+	public String revokeAll(HttpServletRequest request,String  username,int reason) {
+		Result  result =raFunctionsService.revokeUser(request, username,reason);
+		return JSONObject.fromObject(result).toString();
 	}
 	
 	
