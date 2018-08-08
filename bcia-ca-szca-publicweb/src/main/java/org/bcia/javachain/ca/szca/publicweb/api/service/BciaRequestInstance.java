@@ -144,8 +144,10 @@ public class BciaRequestInstance {
 		 String username=form.getUsername();
 //		 String openvpn=null;
 		 String certProfile=form.getCertProfile();
- 		 String keylength="2048";
-		 String keyalg=AlgorithmConstants.KEYALGORITHM_RSA;
+ 		 //String keylength="2048";
+		 //String keyalg=AlgorithmConstants.KEYALGORITHM_RSA;
+		String keylength=form.getKeyLength();
+		String keyalg=form.getKeyAlg();
 		// Possibility to override by code and ignore parameters
 	//	 String keylengthstring=null;
 //		 String keyalgstring=null;
@@ -188,7 +190,7 @@ public class BciaRequestInstance {
 
 			if (data == null) {
 				//throw new ObjectNotFoundException(String.format("指定实体[%s]不存在。",username));
-				throw new Exception(String.format("指定实体[%s]不存在。",username));
+				throw new Exception(String.format("The EndEntity[%s] not exists。",username));
 			}
 
 			boolean savekeys = data.getKeyRecoverable() && usekeyrecovery &&  (data.getStatus() != EndEntityConstants.STATUS_KEYRECOVERY);
@@ -296,6 +298,8 @@ public class BciaRequestInstance {
 				// System.out.println(">>>>>>>>>>>>"+cert);
 				 
 			}
+			data.setStatus(EndEntityConstants.STATUS_GENERATED);
+			endEntityManagementSession.changeUser(administrator, data, false); 
 			success  =true;
 		}catch (Exception e) {
 			e.printStackTrace();

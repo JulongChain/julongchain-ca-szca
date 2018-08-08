@@ -111,7 +111,7 @@ public class RegisterEntityController extends BaseController{
 		try {
 			AuthenticationToken admin =  this.getAuthenticationToken(request);
 			EndEntityInformation entity = registerEntityService.createEndEntityInformation(entityManager,request);
-			apiService.addEndEntityWithPassword(admin, entity);
+			apiService.addEndEntityWithPassword(admin,null, entity);
 			msg = String.format("实体注册成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
