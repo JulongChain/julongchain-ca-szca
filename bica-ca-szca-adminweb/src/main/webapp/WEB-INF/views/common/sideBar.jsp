@@ -2,9 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%--
-  ~
-  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
-  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright ? 2018  SZCA. All Rights Reserved.
   ~ <p>
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,7 +16,6 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  ~
   --%>
 
 <%
@@ -94,13 +92,14 @@ String isOpen(String menuId,String plvl1,String plvl2,String plvl3){
 				<li><a href="page_blog.html"> <i class="icon-comments"></i>服务配置管理
 				</a></li> -->
  			</ul></li>
+		<!--
 		<li class=""><a href="javascript:;"> <i class="icon-gift"></i> <span class="title">系统配置</span> <span class="arrow "></span>
 		</a>
 			<ul class="sub-menu">
 				<li><a href="extra_profile.html">CMP配置管理</a></li>
 				<li><a href="extra_lock.html"> SCEP配置管理</a></li>
 				<li><a href="extra_faq.html"> 系统配置管理</a></li>
- 			</ul></li>
+ 			</ul></li>-->
   	 <!-- 
 		<li class="last "><a href="charts.html"> <i class="icon-bar-chart"></i> <span class="title">管理员首选项</span>
 		</a></li> -->
