@@ -52,7 +52,7 @@
 				<li id="ca_certs" class="nav-item <%=ca_certs%>"><a class="nav-link" href="ca_certs.html">CA证书</a></li>
 				<li id="menu_crl" class="nav-item <%=menu_crl%>"><a class="nav-link" href="ca_crls.html">CRL列表</a></li>
 				<li id="menu_user_cert" class="nav-item <%=menu_user_cert%>"><a class="nav-link" href="user_cert.html">实体证书</a></li>
-				<li id="menu_user_cert" class="nav-item <%=menu_revoke_cert%>"><a class="nav-link" href="revokeCert.html">撤销证书</a></li>
+				<!--<li id="menu_user_cert" class="nav-item <%=menu_revoke_cert%>"><a class="nav-link" href="revokeCert.html">撤销证书</a></li>-->
 				
 				 <!--  
 				<li id="menu_inspect" class="nav-item <%=menu_inspect%>"><a class="nav-link" href="inspect.html">Inspect</a></li>

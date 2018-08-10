@@ -74,7 +74,8 @@ public class CaApiDemo {
         //jsonObject.addProperty("keyType", 2);  //密钥类型  当certType等于2或3时使用，可选，默认是RSA2048，当keyType=2时，为SM2
         //jsonObject.addProperty("CSR", genCSR("CN=test0155")); //证书请求CSR，当certType等于1时必填
         sendEnrollOrUpdateRequest(jsonObject);
-		/*JsonObject jsonObject = new JsonObject();
+        //用户/证书撤销
+		jsonObject = new JsonObject();
 		X509Certificate cert = getX509Certificate(new String(FileUtils.readFile(new File("d:/test0145.cer"))));
 		jsonObject.addProperty("userName", "test0145"); //用户名
 		//jsonObject.addProperty("serialNo", cert.getSerialNumber().toString(16).toUpperCase());   //撤销证书的序列号序列号，当reqType=2时必填，16进制字符串
@@ -82,7 +83,7 @@ public class CaApiDemo {
 
 		jsonObject.addProperty("reqType", 1); //请求类型  1：撤销用户  2：撤销单个证书
 		jsonObject.addProperty("revokeReason", 5); //撤销原因
-		sendRevokeRequest(jsonObject);*/
+		sendRevokeRequest(jsonObject);
     }
 
     public static CloseableHttpClient initClient()  throws Exception{
