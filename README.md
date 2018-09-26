@@ -1,12 +1,20 @@
 **聚龙链CA-全面支持国际通用算法和国密算法的数字证书(CA)管理系统**
 
 **一、系统模块结构**
+
 1.通用代码模块bcia-ca-szca-common
+
 2.在线证书状态查询服务（OCSP）bcia-ca-szca-ocsp-server
+
 3.对外公共服务模块 bcia-ca-szca-publicweb
+
 CA系统的前端公共网站，包含证书业务API接口，注册实体、申请证书、CA证书下载、CRL下载、实体证书下载、CSR生成工具、CSR解析工具等功能
+
 4.CA后台管理模块 bcia-ca-szca-adminweb
+
 CA后台管理系统，包含证书模板管理、CA生成和配置管理、密钥配置管理、终端实体模板管理、终端用户和证书管理、实体证书流程管理等模块。
+
+
 
 **二、数据库;**
 1.数据库连接配置文件是bcia-ca-szca-publicweb/src/main/webapp/META-INF/context.xml
