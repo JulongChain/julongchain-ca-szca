@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!--
+  ~ Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright ? 2018  SZCA. All Rights Reserved.
+  ~ <p>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ <p>
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ <p>
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+     -->  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">   
+    <display-name>SpringMVC HelloWorld</display-name> 
+    
+    <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+   
+    <servlet>  
+          
+        <servlet-name>springMVC</servlet-name>  
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+        <!-- load-on-startup：表示启动容器时初始化该Servlet； -->  
+        <load-on-startup>1</load-on-startup>  
+    </servlet> 
+    
+   
+     
+   
+    <servlet-mapping>  
+        <servlet-name>springMVC</servlet-name>  
+        <!-- url-pattern：表示哪些请求交给Spring Web MVC处理， “/” 是用来定义默认servlet映射的。 -->  
+        <!-- 也可以如“*.html”表示拦截所有以html为扩展名的请求。 -->  
+        <!-- <url-pattern>/</url-pattern> -->
+        <url-pattern>*.html</url-pattern>  
+        <!-- for getcacert api -->
+        <url-pattern>/cainfo</url-pattern>
+	    <url-pattern>/CaInfo</url-pattern>
+	    <url-pattern>/getcacert</url-pattern>
+	    <url-pattern>/getCaCert</url-pattern>
+	    <!-- for register api -->
+	    <url-pattern>/register</url-pattern>
+	    <!-- for enroll api -->
+	    <url-pattern>/enroll</url-pattern>
+	    <!-- for reenroll api -->
+	    <url-pattern>/reenroll</url-pattern>
+	    <!-- for revoke api -->
+	    <url-pattern>/revoke</url-pattern>
+	    <!-- for download cacert,CRL -->
+	     <url-pattern>/webdist/certdist</url-pattern>
+	   
+     </servlet-mapping>  
+   
+     <!-- 
+    <servlet>
+        <display-name>CertDistServlet</display-name>
+        <servlet-name>CertDist</servlet-name>
+        <servlet-class>org.bcia.javachain.ca.szca.common.ca.szca.ui.web.pub.CertDistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+	    <servlet-name>CertDist</servlet-name>
+	    <url-pattern>/webdist/certdist</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+        <display-name>CaInfoServlet</display-name>
+        <servlet-name>CaInfoServlet</servlet-name>
+        <servlet-class>org.bcia.javachain.ca.szca.publicweb.api.servlet.CaInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+	    <servlet-name>CaInfoServlet</servlet-name>
+	    <url-pattern>/cainfo</url-pattern>
+	    <url-pattern>/CaInfo</url-pattern>
+	    <url-pattern>/getcacert</url-pattern>
+	    <url-pattern>/getCaCert</url-pattern>
+    </servlet-mapping>
+    -->
+   
+   <!-- 
+    <servlet>  
+          
+        <servlet-name>loadConfigServlet</servlet-name>  
+        <servlet-class>org.bcia.javachain.ca.szca.publicweb.servlet.LoadConfigServlet</servlet-class>  
+        <load-on-startup>99</load-on-startup>  
+    </servlet>
+    <servlet-mapping>
+	    <servlet-name>loadConfigServlet</servlet-name>
+	    <url-pattern>/loadConfig/*</url-pattern>	    
+    </servlet-mapping> -->
+     <welcome-file-list>  
+        <welcome-file>index.html</welcome-file>  
+    </welcome-file-list>  
+   
+    <!-- 自此请求已交给Spring Web MVC框架处理，因此我们需要配置Spring的配置文件， -->  
+    <!-- 默认DispatcherServlet会加载WEB-INF/[DispatcherServlet的Servlet名字,也就是上面的spring]-servlet.xml配置文件。 -->  
+    <!-- 即spring-servlet.xml -->  
+   
+</web-app>  
+

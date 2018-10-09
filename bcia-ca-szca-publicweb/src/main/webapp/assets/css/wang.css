@@ -1,0 +1,91 @@
+.form-group>input{
+	width:100%;
+	line-height: 2.2rem;
+}
+/*生成实体证书*/
+@media screen and (max-width:991px){
+		.col-md>input{
+			width:100% !important;
+		}
+		.form-group>input{
+			width:100% !important;
+		}
+		.form-group>.probootstrap_select-wrap{
+			width:100%;
+		}
+	}
+	.form-group>input,.form-group>textarea{
+		border:1px solid #d9d9d9;
+	}
+/*获取CA的证书撤销列表CRLs*/
+	.probootstrap-section-half:nth-child(even)>.probootstrap-text>.probootstrap-text{
+		background-color:#f8f8f8;
+		border-top:1px solid #ccc;
+	}
+	.probootstrap-section-half:nth-child(odd)>.probootstrap-text>.probootstrap-text{
+		border-top:1px solid #fff;
+	}
+	.probootstrap-section-half:nth-child(1)>.probootstrap-text>.probootstrap-text,.probootstrap-section-half:nth-child(2)>.probootstrap-text>.probootstrap-text{
+		border-top:none !important;
+	}
+/*获取CA证书*/
+	.probootstrap-section-half:nth-child(even)>.probootstrap-text{
+		background-color:#f8f8f8;
+		border-top:1px solid #ccc;
+	}
+	.probootstrap-section-half:nth-child(odd)>.probootstrap-text{
+		border-top:1px solid #fff;
+	}
+	.probootstrap-section-half:nth-child(1)>.probootstrap-text,.probootstrap-section-half:nth-child(2)>.probootstrap-text{
+		border-top:none !important;
+	}
+	/*右边部分*/
+	.col-md-right{
+		z-index:999;
+	}
+	@media screen and (max-width:991px){
+		.col-md-right{
+			width:100%;
+			margin:0 10px;
+		}
+	}
+	@media screen and (min-width:992px){
+		.col-md-right{
+			min-width:50%;
+		}
+	}
+	.col-md-listRight{
+		z-index:999;
+	}
+	@media screen and (max-width:991px){
+		.col-md-listRight{
+			width:100%;
+		}
+		.heading{
+			text-align:center;
+		}
+	}
+	@media screen and (min-width:992px){
+		.col-md-listRight{
+			width:50%;
+		}
+	}
+	.maxWidth{
+		width:100% !important;
+	}
+	.content-right{
+		padding:1.5rem 2rem;
+	}
+	.probootstrap-cover > .container > .row{
+		padding:2rem 0;
+	}
+	.probootstrap-section-half .probootstrap-text .probootstrap-inner{
+		padding:1.5rem 2rem 0.5rem 2rem;
+	}
+	.content-right>ul{
+		padding-left: 0;
+	}
+	.content-right>ul>li{
+		display: inline-block;
+    	margin-right: 3rem;
+	}
