@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.controller;
@@ -78,15 +76,12 @@ public class EntityCertController {
 				res.getOutputStream().write(certData);
 				res.flushBuffer();
 			} else {
-				res.setCharacterEncoding("utf-8");
-				res.setContentType("html/text");
-				res.getWriter().println("无法获得指定条件对应的证书");
+				res.getWriter().write("<script language='javascript'>alert('Unable to get the certificate corresponding to the specified conditions!');history.go(-1);</script>");
 			}
 		} catch (Exception e) {
 			try {
-				res.setCharacterEncoding("utf-8");
-				res.setContentType("html/text");
-				res.getWriter().println("系统异常：" + e.getMessage());
+				res.getWriter().write("<script language='javascript'>alert('System error!');history.go(-1);</script>");
+				e.printStackTrace();
 			} catch (Exception ee) {
 				e.printStackTrace();
 			}

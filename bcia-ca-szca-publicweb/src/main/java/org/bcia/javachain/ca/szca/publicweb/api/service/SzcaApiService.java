@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.api.service;
@@ -24,45 +22,73 @@ import java.io.PrintStream;
 import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import javax.ejb.FinderException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.bcia.javachain.ca.szca.publicweb.api.ApiAdminUserData;
 import org.bcia.javachain.ca.szca.publicweb.api.CallConfigData;
 import org.bcia.javachain.ca.szca.publicweb.api.CallLogData;
-import org.bouncycastle.jcajce.provider.digest.SHA1;
+import org.bcia.javachain.ca.szca.publicweb.controller.EnrollCertForm;
+import org.bcia.javachain.ca.szca.publicweb.entity.CertProcessData;
+import org.bcia.javachain.ca.szca.publicweb.entity.EndEntityApprovalData;
 import org.cesecore.authentication.tokens.AuthenticationToken;
+import org.cesecore.authorization.AuthorizationDeniedException;
 import org.cesecore.certificates.ca.CAData;
+import org.cesecore.certificates.ca.CAInfo;
+import org.cesecore.certificates.certificate.CertificateConstants;
 import org.cesecore.certificates.certificate.CertificateData;
+import org.cesecore.certificates.certificate.CertificateDataWrapper;
+import org.cesecore.certificates.certificateprofile.CertificateProfileData;
+import org.cesecore.certificates.endentity.EndEntityConstants;
 import org.cesecore.certificates.endentity.EndEntityInformation;
+import org.cesecore.certificates.endentity.EndEntityType;
+import org.cesecore.certificates.endentity.EndEntityTypes;
 import org.cesecore.util.Base64;
 import org.cesecore.util.CertTools;
 import org.ejbca.core.ejb.ra.UserData;
+import org.ejbca.core.ejb.ra.raadmin.EndEntityProfileData;
+import org.ejbca.core.model.approval.ApprovalException;
+import org.ejbca.core.model.approval.WaitingForApprovalException;
+import org.ejbca.core.model.ra.AlreadyRevokedException;
+import org.ejbca.core.model.ra.userdatasource.UserDataSourceConnectionException;
+import org.ejbca.ui.web.CertificateView;
+import org.ejbca.util.crypto.BCrypt;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSession;
-import cn.net.bcia.cesecore.certificates.certificate.CertificateStoreSession;
+import com.google.gson.JsonObject;
+
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSession;
+import org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSessionLocal;
+import org.bcia.javachain.ca.szca.common.bcca.core.model.SecConst;
+import org.bcia.javachain.ca.szca.common.cesecore.certificates.certificate.CertificateStoreSession;
 
 @Repository
 public class SzcaApiService implements ISzcaApiService {
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(SzcaApiService.class);
-
+	@Autowired
+    private CertificateStoreSession certificatesession;
 	@PersistenceContext
 	private EntityManager entityManager;
 	@Autowired
 	EndEntityManagementSession endEntityManagementSession;
+	@Autowired
+	private EndEntityManagementSessionLocal endEntityManagementSessionBean;
 	@Autowired
 	CertificateStoreSession certificateStoreSessionBean;
 	// @Autowired
@@ -160,7 +186,7 @@ public class SzcaApiService implements ISzcaApiService {
 				// 使用org.apache.commons.codec.binary.Base64不会自动格式化
 				// baos.write(org.apache.commons.codec.binary.Base64.encodeBase64(certificate.getEncoded()));
 				baos.write(org.apache.commons.codec.binary.Base64
-						.encodeBase64(org.cesecore.util.Base64.encode(certificate.getEncoded())));
+						.encodeBase64(Base64.encode(certificate.getEncoded())));
 			} catch (Exception e) {
 				new CertificateEncodingException(e.getMessage());
 			}
@@ -282,8 +308,18 @@ public class SzcaApiService implements ISzcaApiService {
 	
 	@Override
 	@Transactional
-	public void addEndEntityWithPassword(AuthenticationToken admin, EndEntityInformation entity) throws Exception {
+	public void addEndEntityWithPassword(AuthenticationToken admin,EndEntityApprovalData endEntityApprovalData, EndEntityInformation entity) throws Exception {
+		if(endEntityApprovalData != null && endEntityApprovalData.getUserName() != null && endEntityApprovalData.getUserName().length() > 0)
+			entityManager.persist(endEntityApprovalData);
 		endEntityManagementSession.addUser(admin, entity, false);
+	}
+	
+	@Override
+	@Transactional
+	public void updateEndEntityWithPassword(AuthenticationToken admin,EndEntityApprovalData endEntityApprovalData, EndEntityInformation entity) throws Exception {
+		if(endEntityApprovalData != null && endEntityApprovalData.getUserName() != null && endEntityApprovalData.getUserName().length() > 0)
+			entityManager.persist(endEntityApprovalData);
+		endEntityManagementSession.changeUser(admin, entity, false);
 	}
 
 	@Override
@@ -389,5 +425,198 @@ public class SzcaApiService implements ISzcaApiService {
             buf.append(HEX_DIGITS[bytes[j] & 0x0f]);  
         }  
         return buf.toString();  
-    }  
+    }
+
+	@Override
+	public EndEntityInformation createEndEntityInformation(JsonObject jsonObject,EnrollCertForm form, EndEntityApprovalData endEntityApprovalData) throws Exception {
+		String userName = jsonObject.get("userName") == null ? null : jsonObject.get("userName").getAsString();
+		String password = jsonObject.get("password") == null ? null : jsonObject.get("password").getAsString();
+		String cn = jsonObject.get("CN") == null ? null : jsonObject.get("CN").getAsString();
+		String o = jsonObject.get("O") == null ? null : jsonObject.get("O").getAsString();
+		String ou = jsonObject.get("OU") == null ? null : jsonObject.get("OU").getAsString();
+		String l = jsonObject.get("L") == null ? null : jsonObject.get("L").getAsString();
+		String s = jsonObject.get("S") == null ? null : jsonObject.get("S").getAsString();
+		String c = jsonObject.get("C") == null ? null : jsonObject.get("C").getAsString();
+		String e = jsonObject.get("E") == null ? null : jsonObject.get("E").getAsString();
+		long processId = jsonObject.get("processId") == null ? 0 : jsonObject.get("processId").getAsLong();
+		int certType = jsonObject.get("certType") == null ? 0 : jsonObject.get("certType").getAsInt();
+		int reqType = jsonObject.get("reqType") == null ? 0 : jsonObject.get("reqType").getAsInt();
+		int keyType = jsonObject.get("keyType") == null ? 0 : jsonObject.get("keyType").getAsInt();
+		String csr = jsonObject.get("CSR") == null ? null : jsonObject.get("CSR").getAsString();
+		if(userName == null || password == null || cn == null || certType == 0 || reqType == 0) throw new Exception(BciaRequestResult.RESULT_CODE_EE_INFO_ERROR);
+		if(processId == 0) throw new Exception(BciaRequestResult.RESULT_CODE_CERT_PROCESS_ERROR);
+		CertProcessData certProcess = CertProcessData.getCertProccess(entityManager, processId);
+		EndEntityProfileData epd = EndEntityProfileData.findByProfileName(entityManager, certProcess.getEndEntityProfileName());
+		CertificateProfileData cpd = CertificateProfileData.findByProfileName(entityManager, certProcess.getCertProfileName());
+		EndEntityInformation entity = new EndEntityInformation();
+		entity.setEndEntityProfileId(epd.getId());
+		entity.setCertificateProfileId(cpd.getId());
+		entity.setDN(getSubjectDn(cn, o, ou, l, s, c, e));
+		entity.setStatus(EndEntityConstants.STATUS_NEW);
+		//entity.setSubjectAltName(getEntitySubject(ENTITY_SUBJECT_SAN_ORDER, request, profileMap));
+		entity.setEmail(e);
+		entity.setPassword(password);
+		CAData caData = CAData.findByName(entityManager, certProcess.getCaName());
+		entity.setCAId(caData.getCaId());
+		entity.setUsername(userName);
+		entity.setTokenType(certType);
+		entity.setType(new EndEntityType(EndEntityTypes.ENDUSER));
+		form.setUsername(userName);
+		form.setPassword(password);
+		form.setCsr(csr);
+		if(keyType == 2) {
+			form.setKeyAlg("ECDSA");
+			form.setKeyLength("sm2p256v1");
+		}
+		form.setTokenType(certType);
+		form.setCertProfile(cpd.getCertificateProfileName());
+		return entity;
+	} 
+	
+	public JsonObject checkEndEntityInfo(JsonObject jsonObject){
+		String userName = jsonObject.get("userName") == null ? null : jsonObject.get("userName").getAsString();
+		String password = jsonObject.get("password") == null ? null : jsonObject.get("password").getAsString();
+		String cn = jsonObject.get("CN") == null ? null : jsonObject.get("CN").getAsString();
+		long processId = jsonObject.get("processId") == null ? 0 : jsonObject.get("processId").getAsLong();
+		int certType = jsonObject.get("certType") == null ? 0 : jsonObject.get("certType").getAsInt();
+		int reqType = jsonObject.get("reqType") == null ? 0 : jsonObject.get("reqType").getAsInt();
+		String csr = jsonObject.get("CSR") == null ? null : jsonObject.get("CSR").getAsString();
+		JsonObject result = new JsonObject();
+		if(userName == null || password == null || cn == null || certType == 0 || reqType == 0) {
+			result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_EE_INFO_ERROR);
+			return result;
+		}
+		if(processId == 0 || CertProcessData.getCertProccess(entityManager, processId) == null) {
+			result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_CERT_PROCESS_ERROR);
+			return result;
+		}
+		if(certType == SecConst.TOKEN_SOFT_BROWSERGEN && csr == null) {
+			result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_CSR_ERROR);
+			return result;
+		}
+		if(reqType == 1 && UserData.findByUsername(entityManager, userName) != null) {
+			result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_USERNAME_EXISTS_ERROR);
+			return result;
+		}
+		if(reqType == 2) {
+			UserData user = UserData.findByUsername(entityManager, userName);
+			if(user == null) {
+				result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_USER_NO_EXISTS_ERROR);
+				return result;
+			}
+			/*try {
+				if(user != null && !comparePassword(password, user.getPasswordHash())) {
+					result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_USERNAME_PASSWORD_ERROR);
+					return result;
+				}
+			} catch (NoSuchAlgorithmException e) {
+				result.addProperty("resultCode", BciaRequestResult.RESULT_CODE_SYSTEM_ERROR);
+				result.addProperty("errorMsg", "Check Password NoSuchAlgorithm ERROR:" + e.getMessage());
+				return result;
+			}*/
+		}
+		
+		return result;
+	}
+	
+	@Transactional 
+	public BciaRequestResult revokeCert(AuthenticationToken administrator, JsonObject jsonObject) {
+		if(jsonObject.get("userName") == null || jsonObject.get("serialNo") == null) 
+			return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKE_PARAM_ERROR, "Error Request Paramters:null", 0, null);
+		String userName = jsonObject.get("userName").getAsString();
+		String serialNo = jsonObject.get("serialNo").getAsString();
+		int reqType = jsonObject.get("reqType").getAsInt();
+		int reason = jsonObject.get("revokeReason") == null ? 0 : jsonObject.get("revokeReason").getAsInt();
+ 		if(BciaRequestResult.REQ_TYPE_REVOKE_USER == reqType) {
+ 			boolean isExistsUser = endEntityManagementSessionBean.existsUser(userName);
+ 			if(!isExistsUser)
+ 				return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_USER_NO_EXISTS_ERROR, null, 0, null);
+ 		}
+ 		
+		List<Integer> excludeStatus = new ArrayList<Integer>();
+		excludeStatus.add(CertificateConstants.CERT_REVOKED);
+		List<CertificateDataWrapper> list=certificatesession.getCertificateDataByUsername(userName, false, excludeStatus);
+		if(list.size()<=0) {
+			return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKED, null, 0, null);
+		}else{
+			CertificateView  certificatedata = null;
+			for(int i=0;i<list.size();i++) {
+				CertificateView  c = new CertificateView(list.get(i));
+				if(c.getSerialNumber().equals(serialNo.toUpperCase())) {
+					certificatedata = c;
+					break;
+				}
+			}
+			if(certificatedata == null) 
+				return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKED, null, 0, null);
+			try {
+				endEntityManagementSessionBean.revokeCert(administrator, certificatedata.getSerialNumberBigInt(), certificatedata.getIssuerDN(), reason);
+				return new BciaRequestResult(true, BciaRequestResult.RESULT_CODE_SUCCESS, null, 0, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKE_FAILURE, e.getMessage(), 0, null);
+			}
+  		}
+	}
+	
+    @Transactional 
+	public BciaRequestResult revokeUser(AuthenticationToken administrator, JsonObject jsonObject) {
+    	if(jsonObject.get("userName") == null || jsonObject.get("reqType") == null) 
+			return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKE_PARAM_ERROR, "Error Request Paramters:null", 0, null);
+		String userName = jsonObject.get("userName").getAsString();
+		int reqType = jsonObject.get("reqType").getAsInt();
+		int reason = jsonObject.get("revokeReason") == null ? 0 : jsonObject.get("revokeReason").getAsInt();
+ 		if(BciaRequestResult.REQ_TYPE_REVOKE_USER == reqType) {
+ 			boolean isExistsUser = endEntityManagementSessionBean.existsUser(userName);
+ 			if(!isExistsUser)
+ 				return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_USER_NO_EXISTS_ERROR, null, 0, null);
+ 		}
+ 		UserData userData = UserData.findByUsername(entityManager, userName);
+		List<Integer> excludeStatus = new ArrayList<Integer>();
+		excludeStatus.add(CertificateConstants.CERT_REVOKED);
+		List<CertificateDataWrapper> list = certificatesession.getCertificateDataByUsername(userName, false, excludeStatus);
+		if(list.size()<=0 || userData.getStatus() == EndEntityConstants.STATUS_REVOKED) {
+			return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKED, null, 0, null);
+		}else{
+			try {
+				endEntityManagementSessionBean.revokeUser(administrator, userName, reason);
+				return new BciaRequestResult(true, BciaRequestResult.RESULT_CODE_SUCCESS, null, 0, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new BciaRequestResult(false, BciaRequestResult.RESULT_CODE_REVOKE_FAILURE, e.getMessage(), 0, null);
+			}
+  		}
+	}
+	
+	private boolean comparePassword(String password,String passwordHash) throws NoSuchAlgorithmException {
+        boolean ret = false;
+        if (password != null) {
+        	String hash = passwordHash;
+            ret = BCrypt.checkpw(password, hash);        		
+        }
+        return ret;
+    }
+	
+	private  String getSubjectDn(String cn, String o, String ou, String l, String s, String c, String email){
+		StringBuilder sb = new StringBuilder();
+		if(!StringUtils.isEmpty(cn))
+			sb.append("CN=").append(cn).append(",");
+		if(!StringUtils.isEmpty(o))
+			sb.append("O=").append(o).append(",");
+		if(!StringUtils.isEmpty(ou))
+			sb.append("OU=").append(ou).append(",");
+		if(!StringUtils.isEmpty(l))
+			sb.append("L=").append(l).append(",");
+		if(!StringUtils.isEmpty(s))
+			sb.append("ST=").append(s).append(",");
+		if(!StringUtils.isEmpty(c))
+			sb.append("C=").append(c).append(",");
+		if(!StringUtils.isEmpty(email))
+			sb.append("E=").append(email).append(",");
+		if(sb.toString().length() > 0){
+			return sb.toString().substring(0,sb.toString().length() - 1);
+		}else{
+			return null;
+		}
+	}
 }

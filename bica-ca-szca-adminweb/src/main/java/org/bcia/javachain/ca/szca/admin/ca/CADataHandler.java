@@ -1,8 +1,7 @@
 
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.ca;
@@ -29,12 +27,7 @@ import java.security.cert.CertPathValidatorException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateParsingException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -76,7 +69,7 @@ import org.ejbca.core.model.ra.raadmin.EndEntityProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.net.bcia.core.ejb.ca.publisher.PublisherSessionLocal;
+import org.bcia.javachain.ca.szca.common.core.ejb.ca.publisher.PublisherSessionLocal;
 
 public class CADataHandler implements Serializable {
 
@@ -91,20 +84,20 @@ public class CADataHandler implements Serializable {
 	// private InformationMemory info;
 
 	//@Autowired
-	//private cn.net.bcia.cesecore.authorization.rules.AccessRuleManagementSessionLocal accessRuleManagementSession;
+	//private org.bcia.javachain.ca.szca.common.cesecore.authorization.rules.AccessRuleManagementSessionLocal accessRuleManagementSession;
 	//@Autowired
-	//private cn.net.bcia.cesecore.authorization.user.AccessUserAspectManagerSessionLocal accessUserAspectManagerSession;
+	//private org.bcia.javachain.ca.szca.common.cesecore.authorization.user.AccessUserAspectManagerSessionLocal accessUserAspectManagerSession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ca.caadmin.CAAdminSessionLocal caadminsession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.caadmin.CAAdminSessionLocal caadminsession;
 	@Autowired
-	private cn.net.bcia.cesecore.certificates.ca.CaSessionLocal caSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal caSession;
 	@Autowired
-	private cn.net.bcia.cesecore.certificates.certificateprofile.CertificateProfileSession certificateProfileSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.certificates.certificateprofile.CertificateProfileSession certificateProfileSession;
 	// @Autowired
-	// private cn.net.bcia.bcca.core.ejb.ra.raadmin.EndEntityProfileSession
+	// private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.raadmin.EndEntityProfileSession
 	// endEntityProfileSession;
 	// @Autowired
-	// private cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSessionLocal
+	// private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSessionLocal
 	// endEntitySession;
 	@Autowired
 	private PublisherSessionLocal publisherSession;
@@ -205,6 +198,7 @@ public class CADataHandler implements Serializable {
 	 * @throws CADoesntExistsException
 	 * @see org.ejbca.core.ejb.ca.caadmin.CAAdminSessionBean
 	 */
+	@Transactional
 	public void editCA(AuthenticationToken administrator, CAInfo cainfo)
 			throws AuthorizationDeniedException, CADoesntExistsException {
 		CAInfo oldinfo = caSession.getCAInfo(administrator, cainfo.getCAId());
@@ -245,6 +239,19 @@ public class CADataHandler implements Serializable {
 
 		caadminsession.initializeCa(administrator, caInfo);
 		// info.cAsEdited();
+	}
+
+	public String checkCaIdExist(AuthenticationToken administrator, int caid) throws AuthorizationDeniedException {
+		if(this.checkForCAId(caid))
+			return "remove failed! Exists caid in UserData.";
+		else if(this.certificateProfileSession.existsCAIdInCertificateProfiles(caid))
+			return "remove failed! Exists caid in Certificate Profile.";
+		else if(this.existsCAInEndEntityProfiles(caid))
+			return "remove failed! Exists caid in EndEntity Profile.";
+		else if(this.existsCaInAccessRules(caid))
+			return "remove failed! Exists caid in Access User Aspect.";
+		else
+			return null;
 	}
 
 	/**
@@ -398,9 +405,9 @@ public class CADataHandler implements Serializable {
 
 		return returnval;
 	}
-
-	public boolean renewCA(AuthenticationToken administrator, int caid, String nextSignKeyAlias,
-			boolean createLinkCertificate) throws Exception {
+	@Transactional
+	public boolean renewCA(AuthenticationToken administrator, int caid, Date nobefore, String nextSignKeyAlias,
+						   boolean createLinkCertificate) throws Exception {
 		if (getCAInfo(administrator, caid).getCAInfo().getSignedBy() == CAInfo.SIGNEDBYEXTERNALCA) {
 			return false;
 		} else {
@@ -410,10 +417,10 @@ public class CADataHandler implements Serializable {
 			}
 			if (nextSignKeyAlias == null || nextSignKeyAlias.length() == 0) {
 				// Generate new keys
-				caadminsession.renewCA(administrator, caid, true, null, createLinkCertificate);
+				caadminsession.renewCA(administrator, caid, true, nobefore, createLinkCertificate);
 			} else {
 				// Use existing keys
-				caadminsession.renewCA(administrator, caid, nextSignKeyAlias, null, createLinkCertificate);
+				caadminsession.renewCA(administrator, caid, nextSignKeyAlias, nobefore, createLinkCertificate);
 			}
 			// info.cAsEdited();
 			return true;

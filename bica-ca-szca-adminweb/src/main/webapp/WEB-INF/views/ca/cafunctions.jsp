@@ -4,9 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.szca.com/jsp/jstl/szca" prefix="szca"%>
 <%--
-  ~
-  ~ Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
-  ~ Copyright © 2018  SZCA. All Rights Reserved.
+  ~ Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+  ~ Copyright ? 2018  SZCA. All Rights Reserved.
   ~ <p>
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,7 +18,6 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  ~
   --%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -69,7 +67,7 @@
 							CA结构与CRLs状态 <small>statistics and more</small>
 						</h3>
 						<ul class="breadcrumb">
-							<li><i class="icon-home"></i> <a href="index.html">CA功能</a>
+							<li><i class="icon-home"></i> <a href="caList.html">CA功能</a>
 								<i class="icon-angle-right"></i></li>
 							<li><a href="#">CA结构与CRLs状态</a></li>
 							<li class="pull-right no-text-shadow">

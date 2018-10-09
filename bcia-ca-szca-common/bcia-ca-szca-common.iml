@@ -11,8 +11,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -71,5 +69,16 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.59" level="project" />
     <orderEntry type="library" name="Maven: com.novell.ldap:jldap:2009-10-07" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.2.5.Final" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bcia-ca-szca-publicweb/src/main/webapp/WEB-INF/lib/bcca-common-cesecore.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../bcia-ca-szca-publicweb/src/main/webapp/WEB-INF/lib/bcca-common-cesecore.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

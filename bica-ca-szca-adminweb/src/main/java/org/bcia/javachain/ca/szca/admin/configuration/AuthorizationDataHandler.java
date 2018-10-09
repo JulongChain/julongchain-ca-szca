@@ -1,9 +1,8 @@
 
 
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +15,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.admin.configuration;
@@ -40,7 +38,7 @@ import org.cesecore.roles.RoleNotFoundException;
 import org.cesecore.roles.access.RoleAccessSession;
 import org.cesecore.roles.management.RoleManagementSession;
 
-import cn.net.bcia.bcca.core.model.InternalEjbcaResources;
+import org.bcia.javachain.ca.szca.common.bcca.core.model.InternalEjbcaResources;
 
 public class AuthorizationDataHandler implements Serializable {
 

@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.service;
@@ -45,12 +43,12 @@ public class RetrieveServiceImpl implements RetrieveService {
 	Logger log = LoggerFactory.getLogger(RetrieveServiceImpl.class);
 	
 	@Autowired
-	cn.net.bcia.cesecore.certificates.certificate.CertificateStoreSessionLocal mStoreSession;
+	org.bcia.javachain.ca.szca.common.cesecore.certificates.certificate.CertificateStoreSessionLocal mStoreSession;
 	// private EjbLocalHelper ejb = new EjbLocalHelper();
 	@Autowired 
-	cn.net.bcia.bcca.core.ejb.ca.sign.SignSession mSignSession  ;
+	org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.sign.SignSession mSignSession  ;
 	@Autowired 
-	cn.net.bcia.cesecore.certificates.ca.CaSessionLocal caSession ;
+	org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal caSession ;
 	// private CertificateStoreSessionLocal mStoreSession =
 	// ejb.getCertificateStoreSession();
 	

@@ -1,7 +1,6 @@
 /*
- *
- * Copyright © 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
- * Copyright © 2018  SZCA. All Rights Reserved.
+ * Copyright ? 2018  深圳市电子商务安全证书管理有限公司(SZCA,深圳CA) 版权所有
+ * Copyright ? 2018  SZCA. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.bcia.javachain.ca.szca.publicweb.api.service;
@@ -109,23 +107,23 @@ public class BciaRequestInstance {
     }
  
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ca.auth.EndEntityAuthenticationSessionLocal authenticationSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.auth.EndEntityAuthenticationSessionLocal authenticationSession;
 	@Autowired
-	private cn.net.bcia.cesecore.certificates.ca.CaSessionLocal caSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.certificates.ca.CaSessionLocal caSession;
 	@Autowired
-	private cn.net.bcia.cesecore.certificates.certificateprofile.CertificateProfileSessionLocal certificateProfileSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.certificates.certificateprofile.CertificateProfileSessionLocal certificateProfileSession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ra.raadmin.EndEntityProfileSessionLocal endEntityProfileSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.raadmin.EndEntityProfileSessionLocal endEntityProfileSession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.keyrecovery.KeyRecoverySessionLocal keyRecoverySession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.keyrecovery.KeyRecoverySessionLocal keyRecoverySession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ca.sign.SignSessionLocal signSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ca.sign.SignSessionLocal signSession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ra.EndEntityManagementSessionLocal endEntityManagementSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityManagementSessionLocal endEntityManagementSession;
 	@Autowired
-	private cn.net.bcia.cesecore.configuration.GlobalConfigurationSession globalConfigurationSession;
+	private org.bcia.javachain.ca.szca.common.cesecore.configuration.GlobalConfigurationSession globalConfigurationSession;
 	@Autowired
-	private cn.net.bcia.bcca.core.ejb.ra.EndEntityAccessSessionLocal endEntityAccessSession;
+	private org.bcia.javachain.ca.szca.common.bcca.core.ejb.ra.EndEntityAccessSessionLocal endEntityAccessSession;
 	 
     @Transactional
     public BciaRequestResult doPost(HttpServletRequest request,EnrollCertForm form) throws IOException, ServletException {
@@ -146,8 +144,10 @@ public class BciaRequestInstance {
 		 String username=form.getUsername();
 //		 String openvpn=null;
 		 String certProfile=form.getCertProfile();
- 		 String keylength="2048";
-		 String keyalg=AlgorithmConstants.KEYALGORITHM_RSA;
+ 		 //String keylength="2048";
+		 //String keyalg=AlgorithmConstants.KEYALGORITHM_RSA;
+		String keylength=form.getKeyLength();
+		String keyalg=form.getKeyAlg();
 		// Possibility to override by code and ignore parameters
 	//	 String keylengthstring=null;
 //		 String keyalgstring=null;
@@ -190,7 +190,7 @@ public class BciaRequestInstance {
 
 			if (data == null) {
 				//throw new ObjectNotFoundException(String.format("指定实体[%s]不存在。",username));
-				throw new Exception(String.format("指定实体[%s]不存在。",username));
+				throw new Exception(String.format("The EndEntity[%s] not exists。",username));
 			}
 
 			boolean savekeys = data.getKeyRecoverable() && usekeyrecovery &&  (data.getStatus() != EndEntityConstants.STATUS_KEYRECOVERY);
@@ -290,7 +290,7 @@ public class BciaRequestInstance {
 				//resultByte = resp.getEncoded();
 				
 				//证书
-				resultByte = Base64.encode(resp.getCertificate().getEncoded(), false);
+				resultByte = Base64.encode(resp.getCertificate().getEncoded(), true);
 				// CertificateFactory cf = CertificateFactory.getInstance("X.509");
 				//将文件以文件流的形式读入证书类Certificate中
 				 // Certificate cert = cf.generateCertificate(bin);
@@ -298,6 +298,8 @@ public class BciaRequestInstance {
 				// System.out.println(">>>>>>>>>>>>"+cert);
 				 
 			}
+			data.setStatus(EndEntityConstants.STATUS_GENERATED);
+			endEntityManagementSession.changeUser(administrator, data, false); 
 			success  =true;
 		}catch (Exception e) {
 			e.printStackTrace();
